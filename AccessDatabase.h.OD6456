@@ -1,0 +1,162 @@
+#ifndef ACCESSDATABASE_H
+#define ACCESSDATABASE_H
+
+#include <QObject>
+#include <QtSql>
+#include <QTableWidgetItem>
+#include <QPrinter>
+#include "Constant.h"
+#include "Global.h"
+#include "MyDebug.cpp"
+
+class SaveTestResultThread:public QThread
+{
+public:
+    QSqlTableModel  *m_sqlTableModel;
+
+private:
+    QList<PropertyAndVariant> m_currentTestResultList;
+    QList<QPixmap> m_pixmapList;
+
+    QMap<QString,QVariant> m_resultMap;
+    QMap<QString,int> m_headData;
+
+    QString m_fileName;
+    QMutex m_mutex;
+
+
+    void run()
+    {
+        QMutexLocker locker(&m_mutex);
+
+        if(m_headData.count() == 0)
+        {
+            getHeaderData();
+        }
+
+        if(m_headData.count() <= 0)
+        {
+            return;
+        }
+        int rowNum  =  m_sqlTableModel->rowCount();//获得表的行数
+        m_sqlTableModel->insertRows(rowNum,1); //添加一行
+
+        foreach(PropertyAndVariant data, m_currentTestResultList)
+        {
+
+            int column = m_headData.value(data.m_property, -1);
+                qDebug()<<"column = "<<column<<"data.m_property = "<<data.m_property;
+
+            if(column<0)
+            {
+                continue;
+            }
+            bool isOk;
+            QModelIndex modelIndex = m_sqlTableModel->index(rowNum,column);
+
+            //文本形式存储
+            if(data.m_property == PROPERTY_PASS_TIME ||
+               data.m_property == PROPERTY_lICENCE ||
+               data.m_property == PROPERTY_BG_COLOR ||
+               data.m_property == PROPERTY_RECORD_STATUS ||
+               data.m_property == PROPERTY_SITE ||
+               data.m_property == PROPERTY_SITE_VERSION ||
+               data.m_property == PROPERTY_EQUIPMENT_ID )
+            {
+                QString text = data.m_variant.toString();
+
+                isOk = m_sqlTableModel->setData(modelIndex,text);
+            }
+            //布尔形式存储
+            else if(data.m_property == PROPERTY_DYNAMIC_MODE ||
+                    data.m_property == PROPERTY_VALIDITY ||
+                    data.m_property == PROPERTY_IS_PASS ||
+                    data.m_property == PROPERTY_IS_DIESEL )
+            {
+                bool value = data.m_variant.toBool();
+                isOk = m_sqlTableModel->setData(modelIndex,value);
+            }
+            //OLE对象形式存储
+            else if(data.m_property == PROPERTY_PIC)
+            {
+                QPixmap pixmap = data.m_variant.value<QPixmap>();
+                if(pixmap.isNull() == true)
+                {
+                    qDebug()<<"m_variant.value<QPixmap> is Null";
+                    return;
+                }
+                QByteArray ByteArray;
+                QBuffer buffer(&ByteArray);
+                buffer.open(QIODevice::WriteOnly);
+                isOk  =  pixmap.save(&buffer ,"jpg",100);
+                if(ByteArray.count() <= 0)
+                {
+                    return;
+                }
+                m_sqlTableModel->setData(modelIndex,ByteArray);
+            }
+            //double形式存储
+            else
+            {
+                bool isOk;
+                double d = data.m_variant.toDouble(&isOk);
+                if(isOk == false)
+                {
+                   d = ERROR_NUMBER*1.0;
+                }
+//                qDebug()<<"d = "<<d;
+                isOk = m_sqlTableModel->setData(modelIndex,d);
+            }
+        }
+        MY_DEBUG("");
+        m_sqlTableModel->submitAll(); //可以直接提交
+        MY_DEBUG("");
+    }
+
+    void getHeaderData()
+    {
+        int count = m_sqlTableModel->columnCount();
+        for(int column = 0;column<count;column++)
+        {
+            QString name = m_sqlTableModel->headerData(column,Qt::Horizontal).toString();
+            m_headData.insert(name,column);
+//            qDebug()<<"name = "<<name;
+        }
+    }
+
+public:
+    void save(QList<PropertyAndVariant> data)
+    {
+        QMutexLocker locker(&m_mutex);
+
+        m_currentTestResultList = data;
+
+        if(this->isRunning() == false)
+        {
+            this->start();
+        }
+    }
+};
+
+class AccessDatabase : public QObject
+{
+    Q_OBJECT
+public:
+    explicit AccessDatabase(QObject *parent  =  0);
+    ~AccessDatabase();
+
+    QSqlTableModel  *m_sqlTableModel;
+    QSqlDatabase     m_dbconn;
+
+    SaveTestResultThread m_saveTestResultThread;
+
+    bool createConnection(QString dbName);
+    bool insertData(QList<PropertyAndVariant> data);
+
+signals:
+
+public slots:
+
+};
+
+#endif // ACCESSDATABASE_H

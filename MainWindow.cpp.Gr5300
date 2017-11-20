@@ -1,0 +1,1336 @@
+#include "MainWindow.h"
+#include "ui_MainWindow.h"
+#include <QCameraInfo>
+#include <QPropertyAnimation>
+#include <QTimer>
+#include <QCloseEvent>
+#include <QParallelAnimationGroup>
+#include <QDateTime>
+#include <QCursor>
+#include <QDir>
+#include <QTextCodec>
+#include <QDesktopWidget>
+#include "MyDebug.cpp"
+
+MainWindow::MainWindow(QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::TestWindow)
+{
+    ui->setupUi(this);
+
+    this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowMinMaxButtonsHint);
+    this->showMaximized();
+
+    m_testResults= NULL;
+    m_plateRecogRegion = NULL;
+    m_testerConnected = false;
+    m_cameraConnected = false;
+
+    m_runningStatus.m_tipsLabel=ui->label_show_tips;
+    m_runningStatus.setParent(this);
+
+    ui->widget_devices_connection_status->hide();
+
+    //用于云台控制
+    this->setMouseTracking(true);
+    QList <QWidget *> w_list=this->findChildren<QWidget *>();
+    foreach(QWidget *w,w_list)
+    {
+        w->setMouseTracking(true);
+    }
+    this->setYunTaiControlVisible(false);
+
+    connect(&m_camera,SIGNAL(loginOk(bool)),
+            this,SLOT(loginFinished(bool)));
+
+    connect(this,SIGNAL(controlYunTai(DWORD,DWORD)),
+            &m_camera,SLOT(controlYunTai(DWORD,DWORD)));
+
+    connect(&m_calibration,SIGNAL(quit()),this,SLOT(hideCalibrationWidget()));
+
+    m_progressDialog.setParent(this);
+    m_progressDialog.hide();
+
+    //终止当前执行流程
+    connect(&m_progressDialog, SIGNAL(cancelClicked()),
+            this, SLOT(processInterrupted()));
+
+    m_connectPage = new ConnectPage(this);
+    m_connectPage->hide();
+    connect(m_connectPage,SIGNAL(buttonClicked())
+            ,this,SLOT(connectDevice()));
+
+    ui->widget_capture_car_img->hide();
+    ui->gridWidget_gas_intensity->hide();
+    ui->widget_show_vedio_parent->hide();
+    ui->widget_test_result->hide();
+    ui->tableWidget_test_result_list->hide();
+
+
+
+    m_selectedStyle=ui->pushButton_settings->styleSheet();
+    m_notSelectedStyle=ui->pushButton_tools->styleSheet();
+    ui->pushButton_settings->setStyleSheet(m_notSelectedStyle);
+
+    initMenu();
+
+    m_propertyList=g_propertyList;
+    m_propertyList.insert(0,PropertyAndText("序号",		PROPERTY_SEQUENCE_NUMBER));
+
+    ui->tableWidget_test_result_list->clear();
+
+    ui->tableWidget_test_result_list->setRowCount(0);
+
+    //+1用于记录保存文件的名称，当单击该行时，读取相应的文件，显示相应的图片
+    //同时隐藏该行
+    ui->tableWidget_test_result_list->setColumnCount(m_propertyList.count()+1);
+    ui->tableWidget_test_result_list->hideColumn(m_propertyList.count());
+
+    qDebug()<<"b m_propertyList.count()="<<m_propertyList.count();
+
+    for(int column=0;column<m_propertyList.count();column++)
+    {
+
+        QTableWidgetItem *item;
+
+        item=ui->tableWidget_test_result_list->horizontalHeaderItem(column);
+        if(item==0)
+        {
+            item=new QTableWidgetItem();
+            ui->tableWidget_test_result_list->setHorizontalHeaderItem(column,item);
+        }
+        item->setText(m_propertyList.at(column).m_text);
+        if(m_propertyList.at(column).m_property==PROPERTY_PASS_TIME)
+        {
+            ui->tableWidget_test_result_list->horizontalHeader()
+                    ->resizeSection(column,160);
+        }
+        else if(m_propertyList.at(column).m_property==PROPERTY_lICENCE)
+        {
+            ui->tableWidget_test_result_list->horizontalHeader()
+                    ->resizeSection(column,79);
+        }
+        else
+        {
+            //自动切换HC|CO|CO2|NO|O2|PEF字体大小
+            QFontMetrics font_metrics=ui->tableWidget_test_result_list
+                    ->horizontalHeader()->fontMetrics();
+
+            int width=font_metrics.width(m_propertyList.at(column).m_text);
+            ui->tableWidget_test_result_list->horizontalHeader()
+                    ->resizeSection(column,width+28);
+        }
+    }
+}
+
+MainWindow::~MainWindow()
+{
+    qDebug()<<"~MainWindow()";
+    delete m_plateRecogRegion;
+    delete m_connectPage;
+
+    delete m_settingsMenu;
+    delete m_helpMenu;
+    delete m_mainMenu;
+    delete m_toolsMenu;
+
+    //不要删除空指针，有可能造成释放资源失败
+    if(m_testResults != NULL)
+    {
+        delete m_testResults;
+    }
+
+    delete ui;
+//    qApp->quit();
+//    QTimer::singleShot(10,qApp,SLOT(quit()));
+}
+
+//从下方往上滑动出现
+void MainWindow::showBlcokWithAnimation()
+{
+
+    ui->label_vertical_spacer->hide();
+
+    ui->widget_test_result->show();
+    ui->widget_capture_car_img->show();
+    ui->widget_show_vedio_parent->show();
+    ui->gridWidget_gas_intensity->show();
+    ui->tableWidget_test_result_list->show();
+
+    int duration=550;
+    QEasingCurve curve=QEasingCurve::OutBack;
+
+
+    /*************
+     * A * B * C *
+     *************
+     * D *   E   *
+     *************/
+    //如上图，主界面分为5个方块A、B、C、D、E
+    QList<QWidget *> widgetList;
+    widgetList<<ui->widget_test_result
+              <<ui->widget_capture_car_img
+              <<ui->widget_show_vedio_parent
+              <<ui->gridWidget_gas_intensity
+              <<ui->tableWidget_test_result_list;
+
+    for(int i=0;i<widgetList.count();i++)
+    {
+        QPropertyAnimation *posAnim=
+                new QPropertyAnimation(widgetList.at(i),"pos");
+        posAnim->setDuration(duration);
+        QPoint startPos=QPoint(widgetList.at(i)->pos().x()
+                               ,QApplication::desktop()->height());
+        posAnim->setStartValue(startPos);
+        posAnim->setEndValue(widgetList.at(i)->pos());
+        posAnim->setEasingCurve(curve);
+
+        widgetList.at(i)->move(startPos);
+
+        QTimer::singleShot(10,posAnim,SLOT(start()));
+
+        connect(posAnim, SIGNAL(finished())
+                ,posAnim, SLOT(deleteLater()));
+
+        if(i==(widgetList.count()-1))
+        {
+//            connect(posAnim, SIGNAL(finished())
+//                    ,m_connectPage, SLOT(show()));
+            connect(posAnim, SIGNAL(finished())
+                    ,this, SLOT(setVisibleDevicesStatus()));
+        }
+    }
+
+    QList<QPushButton *> mybuttonlist=this->findChildren<QPushButton *>();
+    int i=mybuttonlist.count();
+    while(i--)
+    {
+        m_signalMapper.setMapping(mybuttonlist.at(i), mybuttonlist.at(i));
+        connect(mybuttonlist.at(i), SIGNAL(released()),
+                    &m_signalMapper, SLOT(map()));
+
+        //云台控制：鼠标按下的瞬间开始转动云台，鼠标放开时停止转动
+        if(mybuttonlist.at(i)->objectName().
+           contains("pushButton_yuntai_"))
+        {
+            connect(mybuttonlist.at(i),SIGNAL(pressed()),
+                    this,SLOT(turnYunTai()));
+        }
+    }
+    connect(&m_signalMapper, SIGNAL(mapped(QWidget * )),
+            this, SLOT(buttonReleased(QWidget * )));
+
+}
+
+void MainWindow::turnYunTai()
+{
+    QObject *obj=qobject_cast<QObject*>(this->sender());
+    if(obj==0)
+        return;
+
+    QString buttonName=obj->objectName();
+    QByteArray cmd;
+    DWORD dwPTZCommand;
+    if(buttonName.contains("up"))
+    {
+        dwPTZCommand=TILT_UP;
+    }
+    else if(buttonName.contains("down"))
+    {
+        dwPTZCommand=TILT_DOWN;
+    }
+    else if(buttonName.contains("left"))
+    {
+        dwPTZCommand=PAN_LEFT;
+    }
+    else if(buttonName.contains("right"))
+    {
+        dwPTZCommand=PAN_RIGHT;
+    }
+    else if(buttonName.contains("focus_add"))
+    {
+        dwPTZCommand=ZOOM_IN;
+    }
+    else if(buttonName.contains("focus_sub"))
+    {
+        dwPTZCommand=ZOOM_OUT;
+    }
+
+    //是否使用自己配置的云台
+    if(g_settings.value(HKEY_IS_USING_OWN_YUN_TAI,true).toBool()==true)
+    {
+//        controlYunTai(cmd);
+    }
+    else
+    {
+        emit controlYunTai(dwPTZCommand,0);
+    }
+}
+
+void MainWindow::buttonReleased(QWidget *w)
+{
+    QString buttonName=w->objectName();
+
+    if(buttonName.contains(QRegExp("^pushButton_yuntai_(up|down|right|left|focus_add|focus_sub)$")))
+    {
+        stopYunTai();
+
+        //再次发送停止命令，确保云台停止
+        int stopYunTaiTime=50;//ms
+        QTimer::singleShot(stopYunTaiTime,this,SLOT(stopYunTai()));
+    }
+    else if(buttonName == "pushButton_calibrate")
+    {
+//        m_calibration.showMaximized();
+
+        m_calibration.setWindowFlags(Qt::FramelessWindowHint);
+        m_calibration.setParent(this);
+
+        QSize size = this->size();
+        size.setHeight(size.height() - 28 - 19);//28代表上菜单栏高度，19代表下状态栏高度
+        m_calibration.resize(size);
+
+        m_calibration.setWindowOpacity(0);//一开始显示时，界面还没完全初始化好，因此先隐藏起来
+
+        m_calibration.setAutoFillBackground(true);//设置背景色否则会变透明
+
+        /* 这里将m_calibration往下移动了一点，和接下来的
+         * 动画显示showCalibrationWidget时高度一致，否则
+         * 在垂直方向会有跳跃的感觉,可以屏蔽来观察效果
+         */
+        QPoint pos = this->pos();
+        pos.setY(pos.y() + 28);
+        m_calibration.move(pos);
+
+        m_calibration.show();
+        m_calibration.repaint();
+
+        /* 动画显示放到另一个函数中实现，所有的代码都在一个函数中，
+         * 有些需要刷新的操作得不到及时得响应，如m_calibration.move、show、repaint
+         */
+        QTimer::singleShot(30, this, SLOT(showCalibrationWidget()));
+    }
+    else if(buttonName == "pushButton_minimize")
+    {
+        this->showMinimized();
+    }
+    else if(buttonName == "pushButton_close")
+    {
+        this->close();
+    }
+}
+
+//使用动画效果来显示标定界面
+void MainWindow::showCalibrationWidget()
+{
+    QPixmap newPixmap = m_calibration.grab();
+    QSize size = this->size();
+    size.setHeight(size.height() - 28 - 19);
+    QPoint pos = this->pos();
+    pos.setY(pos.y() + 28);
+
+    QRect rect(pos,size);
+    m_calibration.hide();//因为后面要截图因此先把它隐藏起来
+
+    QPixmap oldPixmap = this->grab(rect);
+
+    startAnimation(oldPixmap, newPixmap, &m_calibration, true);
+
+    m_calibration.show();
+    m_calibration.setWindowOpacity(1); //由于之前被设置为0
+}
+
+//使用动画效果来显示标定界面
+void MainWindow::hideCalibrationWidget()
+{
+    MY_DEBUG("");
+    QPixmap oldPixmap = m_calibration.grab();
+    QSize size = this->size();
+    size.setHeight(size.height() - 28 - 19);
+    QPoint pos = this->pos();
+    pos.setY(pos.y() + 28);
+
+    QRect rect(pos,size);
+    m_calibration.hide();//因为后面要截图因此先把它隐藏起来
+
+    QPixmap newPixmap = this->grab(rect);
+
+    QPropertyAnimation *anim = startAnimation(oldPixmap
+                                              , newPixmap
+                                              , &m_calibration
+                                              , false);
+
+    m_calibration.show();
+    connect(anim, SIGNAL(finished()), &m_calibration, SLOT(hide()));
+}
+
+/* 使用动画来切换界面
+ * oldPixmap ：原来显示的界面图片
+ * newPixmap ：即将呈现的界面图片
+ * parent    ：在哪个窗口控件上显示动画
+ * isGoLeft  ：往左边滑动还是右边
+ */
+QPropertyAnimation *MainWindow::startAnimation(QPixmap oldPixmap
+                                                , QPixmap newPixmap
+                                                , QWidget *parent
+                                                , bool isGoLeft)
+{
+    //准备图片
+    QSize size = oldPixmap.size();
+    QPixmap combinationPixmap(size.width()*2, size.height()); //合成的图片
+    QPainter painter(&combinationPixmap);
+
+    if(isGoLeft)//往左边滑动
+    {
+        painter.drawPixmap(0,0,oldPixmap);
+        painter.drawPixmap(size.width(),0,newPixmap.scaled(size));
+    }
+    else
+    {
+        painter.drawPixmap(0,0,newPixmap.scaled(size));
+        painter.drawPixmap(size.width(),0,oldPixmap);
+    }
+    painter.end();
+
+    //..创建QLabel控件，用作动画窗口
+    QLabel *label=new QLabel(parent);
+    label->resize(size.width()*2,size.height());
+    label->setPixmap(combinationPixmap);
+    label->show();
+
+    QPropertyAnimation *anim = new QPropertyAnimation(label,"pos");
+    anim->setDuration(880);
+    anim->setEasingCurve(QEasingCurve::OutQuad);
+    if(isGoLeft)
+    {
+        anim->setStartValue(QPoint(-size.width()/2,0));
+        anim->setEndValue(QPoint(-size.width(),0));
+    }
+    else
+    {
+        anim->setStartValue(QPoint(-size.width()*3/4,0));
+        anim->setEndValue(QPoint(0,0));
+    }
+    anim->start();
+    connect(anim,SIGNAL(finished()),label,SLOT(deleteLater()));
+    connect(anim,SIGNAL(finished()),anim,SLOT(deleteLater()));
+    return anim;
+}
+
+void MainWindow::stopYunTai()
+{
+    //是否使用自己配置的云台
+    if(g_settings.value(HKEY_IS_USING_OWN_YUN_TAI,true).toBool()==true)
+    {
+//        controlYunTai(hexToChar(YUN_TAI_STOP));
+
+        //记录停止后的位置，下次上电自检完毕后转至该位置
+//        controlYunTai(hexToChar(YUN_TAI_SET_PRE_POSITION));
+    }
+    else
+    {
+        emit controlYunTai(UP_RIGHT,1);
+    }
+}
+
+void MainWindow::initMenu()
+{
+    QStringList list;
+    list<<MENU_ITEM_BASIC
+        <<MENU_ITEM_PREFERENCE
+        <<MENU_ITEM_OTHER;
+    m_settingsMenu=new MyMenu(list);
+
+    list.clear();
+    list<<MENU_ITEM_VIEW_RESULTS
+//        <<MENU_ITEM_MANUAL_CAPTURE_FULL
+//        <<MENU_ITEM_MANUAL_CAPTURE_VEDIO
+        <<MENU_ITEM_SPECTRUM
+        <<MENU_ITEM_CONTROL_PANEL;
+    m_toolsMenu=new MyMenu(list);
+
+    list.clear();
+    list<<MENU_ITEM_DISCONNECT
+        <<MENU_ITEM_CONNECT
+        <<MENU_ITEM_QUIT;
+    m_mainMenu=new MyMenu(list);
+
+    list.clear();
+    list<<MENU_ITEM_INSTRUCTION_MANUAL
+        <<MENU_ITEM_ABOUT;
+    m_helpMenu=new MyMenu(list);
+
+    QList<MyMenu *> menuList;
+    menuList<<m_settingsMenu
+            <<m_helpMenu
+            <<m_mainMenu
+            <<m_toolsMenu;
+    foreach(MyMenu *menu,menuList)
+    {
+        connect(menu,SIGNAL(itemClicked(QString))
+                ,this,SLOT(menuItemClicked(QString)));
+//        connect(this,SIGNAL(destroyed()),menu,SLOT(deleteLater()));
+        menu->setParent(this);
+    }
+}
+
+void MainWindow::menuItemClicked(QString item)
+{
+
+    qDebug()<<"item="<<QTextCodec::codecForLocale()
+              ->toUnicode(item.toUtf8());
+    hideButtonMenu();
+    if(item==MENU_ITEM_DISCONNECT)
+    {
+        m_progressDialog.hide();
+    }
+    else if(item==MENU_ITEM_CONNECT)
+    {
+        connectDevice();
+    }
+    else if(item==MENU_ITEM_BASIC ||
+            item==MENU_ITEM_PREFERENCE ||
+            item==MENU_ITEM_OTHER)
+    {
+        m_settingsDialog.close();
+        m_settingsDialog.show();
+//        hideButtonMenu();
+    }
+    else if(item==MENU_ITEM_QUIT)
+    {
+        this->close();
+    }
+    else if(item==MENU_ITEM_VIEW_RESULTS)
+    {
+        if(m_testResults==NULL)
+        {
+            m_testResults = new Results();
+//            connect(m_testResults,SIGNAL(destroyed()),
+//                    this,SLOT(testResultsWidgetDestroy()));
+            qDebug()<<"m_testResults="<<m_testResults;
+        }
+        m_testResults->close();
+        QTimer::singleShot(100,m_testResults,SLOT(show()));
+
+//        m_viewResults.close();
+//        m_viewResults.show();
+    }
+    else if(item==MENU_ITEM_CONTROL_PANEL)
+    {
+        m_controlPanel.showMaximized();
+    }
+    else if(item==MENU_ITEM_SPECTRUM)
+    {
+        m_calibration.showSpectrumPage();
+    }
+    else if(item==MENU_ITEM_MANUAL_CAPTURE_FULL ||
+            item==MENU_ITEM_MANUAL_CAPTURE_VEDIO)
+    {
+        g_createPath(CAPTURE_PATH);
+
+        QLabel *label=new QLabel();
+        label->setWindowFlags(Qt::FramelessWindowHint|Qt::WindowStaysOnTopHint
+                                       |Qt::Tool/*|Qt::SubWindow*/);
+
+        g_msleep(30);//防止菜单被截取
+        QPixmap fullScreenPix,pixmapToSave;
+
+        QPixmap pixmap(this->size());
+        pixmap.fill(Qt::white);
+
+        if(item==MENU_ITEM_MANUAL_CAPTURE_FULL)
+        {
+            fullScreenPix = QPixmap::grabWindow(QApplication::desktop()->winId());
+            pixmapToSave=fullScreenPix.copy(this->rect());
+            label->resize(this->size());
+
+            label->setPixmap(pixmap);
+            label->move(0,0);
+        }
+        else
+        {
+            QPoint pos=ui->widget_show_vedio_parent->mapToGlobal(QPoint(0,0));
+
+            QCursor cursor;
+            cursor.setPos(QPoint(pos.x()+100,pos.y()+100));
+            g_msleep(30);
+
+            fullScreenPix = QPixmap::grabWindow(QApplication::desktop()->winId());
+            QRect rect=ui->widget_show_vedio_parent->rect();
+
+            pixmapToSave=fullScreenPix.copy(pos.x(),pos.y(),rect.width(),rect.height());
+
+            label->resize(ui->widget_show_vedio_parent->size());
+
+            label->setPixmap(pixmap);
+            label->move(ui->widget_show_vedio_parent->mapToGlobal(QPoint(0,0)));
+        }
+        QString passTime=QDateTime::currentDateTime().toString("yyyy-MM-dd_hhmmss");
+        pixmapToSave.save(CAPTURE_PATH+passTime+".jpg","jpg",100);
+
+        label->show();
+        QPropertyAnimation *anim = new QPropertyAnimation(label,"windowOpacity");
+        anim->setEasingCurve(QEasingCurve::InQuart);
+        anim->setDuration(800);
+        anim->setStartValue(1.0);
+        anim->setEndValue(0.5);
+        anim->start();
+        connect(anim,SIGNAL(finished()),label,SLOT(deleteLater()));
+    }
+
+    else if(item==MENU_ITEM_INSTRUCTION_MANUAL)
+    {
+        updateGasResultColumn();
+        updateTestResultText();
+    }
+    else if(item==MENU_ITEM_ABOUT)
+    {
+        emit g_mySignal.showTips(QString(MENU_ITEM_ABOUT)+"!");
+        static About *aboutWidget=NULL;
+        if(aboutWidget==NULL)
+        {
+            aboutWidget=new About();
+            connect(this,SIGNAL(destroyed()),aboutWidget,SLOT(deleteLater()));
+        }
+        aboutWidget->close();
+        aboutWidget->show();
+    }
+}
+
+void MainWindow::hideButtonMenu()
+{
+    ui->pushButton_settings->setStyleSheet(this->m_notSelectedStyle);
+    ui->pushButton_tools->setStyleSheet(this->m_notSelectedStyle);
+    ui->pushButton_main_menu->setStyleSheet(this->m_notSelectedStyle);
+    ui->pushButton_help->setStyleSheet(this->m_notSelectedStyle);
+    ui->pushButton_calibrate->setStyleSheet(this->m_notSelectedStyle);
+    m_helpMenu->hide();
+    m_toolsMenu->hide();
+    m_settingsMenu->hide();
+    m_mainMenu->hide();
+}
+
+void MainWindow::closeEvent(QCloseEvent * event)
+{
+    if(QSysInfo::WV_XP==QSysInfo::windowsVersion())
+    {
+//        qApp->quit();
+    }
+    else
+    {
+        event->ignore();
+//        m_weather.stop();
+//        m_weather.wait();
+
+        /*待优化05.31
+         * m_camera不能直接deleteLater
+         */
+//        QTimer::singleShot(10,&m_camera,SLOT(deleteLater()));
+        QTimer::singleShot(20,this,SLOT(closeWithAnimation()));
+    }
+}
+
+void MainWindow::closeWithAnimation()
+{
+    this->setMinimumHeight(0); //因为窗口之前被设置为固定大小
+
+    int duration=400;
+    QEasingCurve esasing_curve=QEasingCurve::OutQuad;
+    QPropertyAnimation *rect_animation=
+            new QPropertyAnimation(this,"size");//使用geometry效果不佳
+    rect_animation->setDuration(duration);
+    rect_animation->setEndValue(QSize(/*this->pos().x(),this->pos().y()+this->height()/2,*/
+                                      this->width(),10));
+    rect_animation->setEasingCurve(esasing_curve);
+
+    QPropertyAnimation *pos_animation=new QPropertyAnimation(this,"pos");
+    pos_animation->setDuration(duration);
+    pos_animation->setEndValue(QPoint(this->pos().x()
+                                      ,this->pos().y()+this->height()/2));
+    pos_animation->setEasingCurve(esasing_curve);
+
+    QPropertyAnimation *opacity_animation=new QPropertyAnimation(this,"windowOpacity");
+    opacity_animation->setDuration(duration);
+//    opacity_animation->setStartValue(0.8);
+    opacity_animation->setEndValue(0.35);
+    opacity_animation->setEasingCurve(esasing_curve);
+
+
+    QParallelAnimationGroup *group=new QParallelAnimationGroup();
+    group->addAnimation(pos_animation);
+    group->addAnimation(rect_animation);
+    group->addAnimation(opacity_animation);
+
+    connect(group, SIGNAL(finished()),group, SLOT(deleteLater()));
+    connect(group, SIGNAL(finished()),rect_animation, SLOT(deleteLater()));
+    connect(group, SIGNAL(finished()),pos_animation, SLOT(deleteLater()));
+    connect(group, SIGNAL(finished()),opacity_animation, SLOT(deleteLater()));
+    connect(group, SIGNAL(finished()),this, SLOT(hide()));
+//    connect(group, SIGNAL(finished()),this, SLOT(deleteLater()));
+//    connect(this,SIGNAL(destroyed()),qApp,SLOT(quit()));
+//    connect(group, SIGNAL(finished()),this, SLOT(appQuit()));
+    connect(group,SIGNAL(finished()),qApp,SLOT(quit())); //退出app，并释放资源
+//    connect(group,SIGNAL(finished()),qApp,SLOT(e)
+
+    group->start();
+}
+
+//void MainWindow::quit()
+//{
+//    MY_DEBUG("");
+//    this->hide();
+//    qApp->processEvents();
+
+////    m_camera.clearUP();
+
+////    emit this->quitApp();
+////    this->deleteLater();
+//    qApp->exit(0);
+////    QTimer::singleShot(500,qApp,SLOT(quit()));
+////    connect(this,SIGNAL(destroyed()),qApp,SLOT(quit()));
+//}
+
+void MainWindow::connectDevice()
+{
+    m_connectPage->hide();
+
+    int width=this->width();
+    int height=this->height();
+
+    m_progressDialog.resize(width,height/*-28*/);
+    m_progressDialog.move(0,0/*28*/);
+    m_progressDialog.is_show_cancel_button=true;
+
+    this->m_progressDialog.showMessage(tr("正在连接设备..."));
+    this->m_progressDialog.show();
+    this->m_progressDialog.repaint();
+
+    if(m_camera.isRunning() == false)
+    {
+        m_camera.m_hWnd=(HWND)ui->widget_show_vedio->winId();
+        QTimer::singleShot(10, &m_camera, SLOT(start()));
+        //        QTimer::singleShot(10, &m_camera, SLOT(loginCamera()));
+    }
+}
+
+void MainWindow::mousePressEvent(QMouseEvent * event)
+{
+    qDebug()<<"mousePressEvent !";
+    hideButtonMenu();
+}
+
+void MainWindow::processInterrupted()
+{
+    m_progressDialog.hide();
+//    bool reply=g_showAskingDialog(tr("确定要结束操作吗？"),this);
+//    qDebug()<<"reply="<<reply;
+//    if(reply==true)
+//        serial_port_thread->stopAllProcess();
+}
+
+int MainWindow::getColumnPosition(QString property)
+{
+    int count=m_propertyList.count();
+    for(int i=0;i<count;i++)
+    {
+        if(m_propertyList.at(i).m_property==property)
+        {
+            return i;
+        }
+    }
+
+    return 0;
+}
+
+void MainWindow::switchCarPic(QPixmap carPixmap)
+{
+
+    //使用属性动画来切换图片
+    QSize car_size=ui->label_show_capture_img->size();
+    QPixmap pixmap(car_size.width()*2,car_size.height());
+    QPainter painter(&pixmap);
+    bool is_on_right=true;
+    if(is_on_right)
+    {
+        painter.drawPixmap(0,0,QPixmap::grabWidget(ui->label_show_capture_img));
+        painter.drawPixmap(car_size.width(),0,carPixmap.scaled(car_size));
+    }
+    else
+    {
+        painter.drawPixmap(0,0,carPixmap.scaled(car_size));
+        painter.drawPixmap(car_size.width(),0,QPixmap::grabWidget(ui->label_show_capture_img));
+    }
+
+    painter.end();
+
+    QLabel *label=new QLabel(ui->label_show_capture_img);
+    label->resize(car_size.width()*2,car_size.height());
+//    label->move(0,0);
+    label->setPixmap(pixmap);
+    label->show();
+//    qDebug()<<"pixmap.size()="<<pixmap.size();
+//    qDebug()<<"label.size()="<<label->size();
+    QPropertyAnimation *anim=new QPropertyAnimation(label,"pos");
+    anim->setDuration(380);
+    anim->setEasingCurve(QEasingCurve::OutQuad);
+    if(is_on_right)
+    {
+        anim->setStartValue(QPoint(-car_size.width()/2,0));
+        anim->setEndValue(QPoint(-car_size.width(),0));
+    }
+    else
+    {
+        anim->setStartValue(QPoint(-car_size.width()/2,0));
+        anim->setEndValue(QPoint(0,0));
+    }
+    anim->start();
+    connect(anim,SIGNAL(finished()),label,SLOT(deleteLater()));
+
+
+    ui->label_show_capture_img->setPixmap(carPixmap);
+//    m_pixmap.save("test.jpg","JPG");//保存图片知本身存在黑边
+    ui->label_show_capture_img->update();
+}
+
+//用于隐藏或者显示控制云台按钮
+void MainWindow::mouseMoveEvent(QMouseEvent *event)
+{
+//    qDebug()<<event->pos();
+
+
+    if(m_connectPage->hasFocus() == false)
+    {
+//        MY_DEBUG("m_connectPage->hasFocus() == false");
+        /* 1.长时间后界面会失去焦点，菜单按钮看不出选中的效果
+         *   因此重新获取焦点 2016-06-30
+         */
+//        this->setFocus();
+
+        /* 长时间后，有时QMainWindow会变得很卡，并且失去焦点，
+         * 因此增加如下一行代码，问题暂时得到处理 060705
+         */
+//        m_connectPage->activateWindow();
+        m_connectPage->setFocus();
+    }
+
+    //判断是否该显示云台控制按钮、车牌识别区等
+    //当鼠标移至图像浏览子窗口时显示云台控制按钮等，否则隐藏
+    QPoint pos=ui->widget_show_vedio_parent->mapToGlobal(QPoint(0,0));
+    int x=event->pos().x()-pos.x();
+    int y=event->pos().y()-pos.y();
+    QRect vedioWidgetRect=ui->widget_show_vedio_parent->rect();
+    if(vedioWidgetRect.contains(QPoint(x,y)))
+    {
+        if(ui->pushButton_yuntai_right->isVisible()==false)
+        {
+            setYunTaiControlVisible(true);
+            //当鼠标突然移动到具有鼠标捕获的控件上，则需要判断是否该隐藏云台控制按钮
+            QTimer::singleShot(50,this,SLOT(isTimeToHide()));
+        }
+    }
+    else if(ui->pushButton_yuntai_right->isVisible())
+    {
+        setYunTaiControlVisible(false);
+    }
+
+    //当鼠标移至界面左下角“信息提示”时、及停留在信息提示窗口时
+    //显示"信息提示窗口"，否则隐藏该窗口
+    pos=ui->widget_tips->mapToGlobal(QPoint(0,0));
+    x = event->pos().x()-pos.x();
+    y = event->pos().y()-pos.y();
+    QRect tipsRect=ui->widget_tips->rect();
+    if(tipsRect.contains(QPoint(x,y))&& x<70)
+    {
+        QSize size=ui->gridWidget_gas_intensity->size();
+        if(m_runningStatus.size()!=size)
+        {
+            m_runningStatus.resize(size);
+        }
+
+        if(m_runningStatus.isVisible()==false)
+        {
+            QTimer::singleShot(410,this,SLOT(showTipsWidget()));
+        }
+    }
+    else
+    {
+        pos=m_runningStatus.mapToGlobal(QPoint(0,0));
+        x=event->pos().x()-pos.x();
+        y=event->pos().y()-pos.y();
+        QRect rect=m_runningStatus.rect();
+        if(rect.contains(QPoint(x,y))==false &&
+           m_runningStatus.isVisible()==true)
+        {
+            m_runningStatus.setVisible(false);
+        }
+    }
+
+    //鼠标移至界面左上角菜单栏时，显示下拉菜单；移开时隐藏
+    bool isMouseOnMenuButton=false;
+    QMap<QPushButton *,MyMenu *> buttonAndMenuMap;
+    buttonAndMenuMap.insert(ui->pushButton_main_menu,m_mainMenu);
+    buttonAndMenuMap.insert(ui->pushButton_settings,m_settingsMenu);
+    buttonAndMenuMap.insert(ui->pushButton_tools,m_toolsMenu);
+    buttonAndMenuMap.insert(ui->pushButton_help,m_helpMenu);
+    QList<QPushButton *> pushButtonList=buttonAndMenuMap.keys();
+    QList<MyMenu *> menuWidgetList=buttonAndMenuMap.values();
+    foreach(QPushButton *button,pushButtonList)
+    {
+        pos=button->mapToGlobal(QPoint(0,0));
+        x=event->pos().x()-pos.x();
+        y=event->pos().y()-pos.y();
+        QRect rect=button->rect();
+        if(rect.contains(QPoint(x,y)))
+        {
+            isMouseOnMenuButton=true;
+            MyMenu *menu=buttonAndMenuMap.value(button,NULL);
+            if(menu!=NULL && menu->isVisible()==false)
+            {
+                this->hideButtonMenu();
+                QPoint pos=button->pos();
+                pos.setY(pos.y()+button->height());
+                menu->move(pos);
+                menu->show();
+                menu->raise(); // 显示到最顶层
+                button->setStyleSheet(m_selectedStyle);
+            }
+            break;
+        }
+    }
+    foreach(MyMenu *menu,menuWidgetList)
+    {
+        if(menu->isVisible() && isMouseOnMenuButton==false)
+        {
+            pos=menu->mapToGlobal(QPoint(0,0));
+            x=event->pos().x()-pos.x();
+            y=event->pos().y()-pos.y();
+            QRect rect=menu->rect();
+            if(rect.contains(QPoint(x,y))==false)
+            {
+                this->hideButtonMenu();
+            }
+            break;
+        }
+    }
+}
+
+//是否该隐藏云台控制按钮或者信息提示窗口
+void MainWindow::isTimeToHide()
+{
+    //云台控制按钮等
+    QPoint pos=ui->widget_show_vedio_parent->mapToGlobal(QPoint(0,0));
+    int x=QCursor::pos().x()-pos.x();
+    int y=QCursor::pos().y()-pos.y();
+    QRect rect=ui->widget_show_vedio_parent->rect();
+    if(rect.contains(QPoint(x,y))==false)
+    {
+        setYunTaiControlVisible(false);
+    }
+    else
+    {
+        QTimer::singleShot(50,this,SLOT(isTimeToHide()));
+    }
+
+    //信息提示窗口
+    pos=m_runningStatus.mapToGlobal(QPoint(0,0));
+    x=QCursor::pos().x()-pos.x();
+    y=QCursor::pos().y()-pos.y();
+    QRect rectTips=m_runningStatus.rect();
+    rectTips.setHeight(rectTips.height()+28);
+    if(rectTips.contains(QPoint(x,y))==false)
+    {
+        m_runningStatus.setVisible(false);
+    }
+    else
+    {
+        QTimer::singleShot(50,this,SLOT(isTimeToHide()));
+    }
+
+}
+
+void MainWindow::setYunTaiControlVisible(bool value)
+{
+    ui->widget_yuntai->setVisible(value);
+
+    if(m_plateRecogRegion==NULL)
+    {
+        m_plateRecogRegion=new PlateRecogRegion();
+    }
+    if(m_plateRecogRegion->size()!=ui->widget_show_vedio->size())
+    {
+        m_plateRecogRegion->resize(ui->widget_show_vedio->size());
+        QTimer::singleShot(10,m_plateRecogRegion,SLOT(updateRecogRegion()));
+    }
+    m_plateRecogRegion->move(ui->widget_show_vedio->mapToGlobal(QPoint(0,0)));
+    m_plateRecogRegion->setVisible(value);
+}
+
+void MainWindow::on_tableWidget_test_result_list_itemClicked(QTableWidgetItem *item)
+{
+    int row=item->row();
+
+    item=ui->tableWidget_test_result_list->item(row,
+                           ui->tableWidget_test_result_list->columnCount()-1);
+//    qDebug()<<"item="<<item->text();
+    if(item==0)
+        return;
+
+    QFile file(item->text());
+    if(file.open(QFile::ReadOnly)==false)
+    {
+        qDebug()<<"open file for reading failed!";
+        return;
+    }
+
+    QMap<QString,QVariant> resultMap;
+
+    QDataStream out(&file);
+    out.setVersion(QDataStream::Qt_4_7);
+    out>>resultMap;
+
+    if(resultMap.count()==0)
+        return;
+
+    QPixmap pixmap;
+    out>>pixmap;
+
+    ui->label_car_licence->setText(resultMap.value(PROPERTY_lICENCE).toString());
+    ui->label_car_licence_color->setText(resultMap.value(PROPERTY_BG_COLOR).toString());
+    ui->label_entire_believability->setText(resultMap.value(PROPERTY_RELIABILITY).toString());
+
+    if(pixmap.isNull()==false)
+    {
+        pixmap=pixmap.scaled(ui->label_show_capture_img->size());
+        QPainter painter(&pixmap);
+        QPixmap tmpPixmap;
+        out>>tmpPixmap;
+        tmpPixmap=tmpPixmap.scaled(70,35/*tmpPixmap.width()/2,tmpPixmap.height()/2*/);
+        painter.drawPixmap(0,0,tmpPixmap);
+        QPen pen(Qt::gray);
+        pen.setWidth(1);
+        painter.setPen(pen);
+        painter.drawRect(tmpPixmap.rect());
+        painter.end();
+        switchCarPic(pixmap);
+//        ui->label_show_capture_img->setPixmap(pixmap);
+    }
+}
+
+void MainWindow::loginFinished(bool value)
+{
+    m_cameraConnected = value;
+
+    m_progressDialog.hide();
+    if(value==true)
+    {
+        qDebug()<<"m_progressDialog.hide()";
+    }
+    else
+    {
+        QMessageBox::information(NULL,"提示","Login error!",QMessageBox::Ok);
+        m_connectPage->show();
+    }
+}
+
+void MainWindow::updateWeather(WeatherReport data)
+{
+    ui->label_wind_speed->setText(tr("风速：")+data.windSpeed+"m/s");
+    ui->label_wind_direction->setText(tr("风向：")+data.windDirection+tr("度"));
+    ui->label_temprature->setText(tr("温度：")+data.temperature+"℃");
+    ui->label_humidity->setText(tr("湿度：")+data.humidity+"%");
+    ui->label_atmosphere->setText(tr("大气压：")+data.atmosphere+"hPa");
+}
+
+void MainWindow::updateGasResultColumn()
+{
+    //将父窗口固定起来，否则大小会改变
+    static bool isSetMax=false;
+    if(isSetMax==false)
+    {
+        isSetMax=true;
+        QSize size=ui->gridWidget_gas_intensity->size();
+        ui->gridWidget_gas_intensity->setMaximumSize(size);
+    }
+
+    QList<QWidget *> widgetList;
+    widgetList<<ui->widget_result_CO2
+             <<ui->widget_result_CO
+             <<ui->widget_result_HC
+             <<ui->widget_result_NO
+             <<ui->widget_result_blackening
+             <<ui->widget_result_K
+             <<ui->widget_result_OP_max
+             <<ui->widget_result_OP_avg;
+
+    QWidget *parentW=ui->label_result_CO2->parentWidget();
+    if(parentW==0)
+    {
+        return;
+    }
+
+    int MY_RAND_MAX=101;
+    int minTextHeight=19;
+    int maxHeight=parentW->height()-minTextHeight;
+    qDebug()<<"maxHeight="<<maxHeight;
+    int duration=400;
+    QEasingCurve esasing_curve=QEasingCurve::OutQuad;
+    qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
+    foreach(QWidget *widget,widgetList)
+    {
+        if(widget->maximumHeight()>maxHeight)
+        {
+            widget->setMaximumHeight(maxHeight);
+        }
+        QPropertyAnimation *height_anim=
+                new QPropertyAnimation(widget,"maximumHeight");
+        height_anim->setDuration(duration);
+        int rand=qrand()%MY_RAND_MAX;
+        int endValue=maxHeight*(rand/(MY_RAND_MAX*1.0))/*+minTextHeight*/;
+        qDebug()<<"endValue="<<endValue;
+        height_anim->setEndValue(endValue);
+        height_anim->setEasingCurve(esasing_curve);
+        height_anim->start();
+        connect(height_anim,SIGNAL(finished())
+                ,height_anim,SLOT(deleteLater()));
+    }
+}
+
+void MainWindow::updateTestResultText()
+{
+    QString carLicense=m_captureResults.license;
+    QString carLicenseColor=m_captureResults.licenseColor;
+    int byEntireBelievability=m_captureResults.believability;
+
+    ui->label_car_licence->setText(carLicense);
+    ui->label_car_licence_color->setText(carLicenseColor);
+    ui->label_entire_believability->setText(QString().setNum(byEntireBelievability));
+
+    g_showLabelTextWithAnim(ui->label_car_licence,
+                            ui->label_car_licence->text(),false);
+    g_showLabelTextWithAnim(ui->label_car_licence_color,
+                            ui->label_car_licence_color->text());
+    g_showLabelTextWithAnim(ui->label_entire_believability,
+                            ui->label_entire_believability->text(),false);
+    g_showLabelTextWithAnim(ui->label_car_speed,
+                            ui->label_car_speed->text());
+    g_showLabelTextWithAnim(ui->label_car_acceleration,
+                            ui->label_car_acceleration->text(),false);
+    QString failed="<font color=#ff0000>不合格</font>";
+    QString passed="<font color=#00ff00>合格</font>";
+    static bool isPassed=true;
+    if(isPassed==true)
+    {
+        g_showLabelTextWithAnim(ui->label_car_state,passed);
+    }
+    else
+    {
+        g_showLabelTextWithAnim(ui->label_car_state,failed);
+    }
+    isPassed=!isPassed;
+}
+
+void MainWindow::showTipsWidget()
+{
+    QPoint pos=ui->widget_tips->mapToGlobal(QPoint(0,0));
+
+    int x=QCursor::pos().x()-pos.x();
+    int y=QCursor::pos().y()-pos.y();
+    QRect rectTips=ui->widget_tips->rect();
+    if(rectTips.contains(QPoint(x,y))&& x<70)
+    {
+        QSize size=ui->gridWidget_gas_intensity->size();
+        if(m_runningStatus.size()!=size)
+        {
+            m_runningStatus.resize(size);
+        }
+        QPoint newPos=QPoint(0,pos.y()-m_runningStatus.height());
+//        m_showTipsWidget.move(newPos);
+
+        if(m_runningStatus.isVisible()==false)
+        {
+            m_runningStatus.show();
+            QPropertyAnimation *anim=new QPropertyAnimation(&m_runningStatus,"pos");
+            anim->setDuration(280);
+            anim->setEasingCurve(QEasingCurve::OutQuad);
+            anim->setStartValue(QPoint(newPos.x(),newPos.y()-50));
+            anim->setEndValue(newPos);
+            anim->start();
+            QObject::connect(anim,SIGNAL(finished()),anim,SLOT(deleteLater()));
+            QObject::connect(anim,SIGNAL(finished()),this,SLOT(isTimeToHide()));
+        }
+    }
+}
+
+void MainWindow::receiveCaptureInfo(CaptureResults captureResults)
+{
+    qDebug()<<"called receiveCaptureInfo (MY_NET_ITS_PLATE_RESULT)";
+    m_captureResults = captureResults;
+
+    m_currentTestResultList.append(PropertyAndVariant(PROPERTY_IS_PASS,false));
+
+    m_currentTestResultList.append(PropertyAndVariant(PROPERTY_lICENCE,
+                                    m_captureResults.license));
+
+    m_currentTestResultList.append(PropertyAndVariant(PROPERTY_BG_COLOR,
+                                    m_captureResults.licenseColor));
+
+    QString passTime=QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz");
+    m_currentTestResultList.append(PropertyAndVariant(PROPERTY_PASS_TIME,passTime));
+
+    m_currentTestResultList.append(PropertyAndVariant(PROPERTY_RELIABILITY,
+                                    m_captureResults.believability));
+
+    QPixmap carImg=m_captureResults.vehiclePic;
+    m_currentTestResultList.append(PropertyAndVariant(PROPERTY_PIC,carImg));
+
+    m_currentTestResultList.append(PropertyAndVariant(PROPERTY_DEVICE_ID,1));
+
+    //显示抓拍到的车牌图片（在上排中间窗口）
+    carImg=carImg.scaled(ui->label_show_capture_img->size());
+    switchCarPic(carImg);
+
+    //增加一条测量记录（在右下角窗口）
+    addOneRowTestResult();
+
+    //更新气体测量值（在左下角窗口：图表中柱体高度）
+    updateGasResultColumn();
+
+    //更新车辆号、合格与否等信息（在左上角窗口）
+    updateTestResultText();
+
+    //保存测量结果
+//    saveTestResult(my_NET_ITS_PLATE_RESULT.carPic);
+}
+
+void MainWindow::receiveTestResult(CarTestResults carTestResults)
+{
+    receiveCaptureInfo(carTestResults.captureResults);
+}
+
+void MainWindow::addOneRowTestResult()
+{
+    int rowCount=0;
+
+    QString carLicense=m_captureResults.license;
+    QString carLicenseColor=m_captureResults.licenseColor;
+    int byEntireBelievability=m_captureResults.believability;
+
+    ui->tableWidget_test_result_list->insertRow(0);//在表格开头添加一行
+    QTableWidgetItem *item;
+    for(int i=0;i<ui->tableWidget_test_result_list->columnCount();i++)
+    {
+        item=ui->tableWidget_test_result_list->item(rowCount,i);
+        if(item==0)
+        {
+            item=new QTableWidgetItem();
+            ui->tableWidget_test_result_list->setItem(rowCount,i,item);
+        }
+    }
+
+    //增加显示一条测量结果（在右下角窗口）
+    //序号
+    int column=this->getColumnPosition(PROPERTY_SEQUENCE_NUMBER);
+    item=ui->tableWidget_test_result_list->item(rowCount,column);
+    item->setText(QString().setNum(ui->tableWidget_test_result_list->rowCount()));
+
+    //状态
+    column=this->getColumnPosition(PROPERTY_IS_PASS);
+    item=ui->tableWidget_test_result_list->item(rowCount,column);
+    item->setText(tr("超标"));
+
+    //通过时间
+    column=this->getColumnPosition(PROPERTY_PASS_TIME);
+    item=ui->tableWidget_test_result_list->item(rowCount,column);
+    QString passTime=QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz");
+    item->setText(passTime);
+
+    //车牌号
+    column=this->getColumnPosition(PROPERTY_lICENCE);
+    item=ui->tableWidget_test_result_list->item(rowCount,column);
+    item->setText(carLicense);
+
+    //车牌颜色
+    column=this->getColumnPosition(PROPERTY_BG_COLOR);
+    item=ui->tableWidget_test_result_list->item(rowCount,column);
+    item->setText(carLicenseColor);
+
+    //车牌置信度
+    column=this->getColumnPosition(PROPERTY_RELIABILITY);
+    item=ui->tableWidget_test_result_list->item(rowCount,column);
+    item->setText(QString().setNum(byEntireBelievability));
+
+    ui->tableWidget_test_result_list->selectRow(rowCount);
+
+    if(rowCount>=ui->tableWidget_test_result_list->rowCount())
+    {
+        QTimer::singleShot(30,ui->tableWidget_test_result_list,SLOT(scrollToTop()));
+    }
+
+    rowCount++;
+}
+
+void MainWindow::hasClient(bool value)
+{
+    m_testerConnected = value;
+}
+
+void MainWindow::setVisibleDevicesStatus()
+{
+    QString statusText;
+    if(m_testerConnected == false)
+    {
+        statusText.append(tr("测量主机"));
+    }
+    if(m_testerConnected == false)
+    {
+        if(statusText.count())
+        {
+            statusText.append("、");
+        }
+        statusText.append(tr("抓拍机"));
+    }
+    bool visible = false;
+    if(statusText.count())
+    {
+        statusText = tr("提示：") + statusText + (tr("未连接! 连接中..."));
+        ui->label_devices_connection_status->setText(statusText);
+        visible = true;
+    }
+
+    QWidget *widget = ui->widget_devices_connection_status;
+    static int maxWidth = widget->height();
+    QPropertyAnimation *anim=new QPropertyAnimation(widget, "maximumHeight");
+    anim->setDuration(600);
+    anim->setEasingCurve(QEasingCurve::OutQuad);
+
+    //隐藏
+    if(visible == false)
+    {
+        if(widget->isVisible() == false)
+        {
+            anim->deleteLater();
+            return;
+        }
+        anim->setStartValue(maxWidth);
+        anim->setEndValue(0);
+        connect(anim,SIGNAL(finished()), widget,SLOT(hide()));
+    }
+    else//显示
+    {
+        if(widget->isVisible() == true)
+        {
+            anim->deleteLater();
+            return;
+        }
+        widget->show();
+        widget->setMaximumHeight(0);
+        anim->setStartValue(0);
+        anim->setEndValue(maxWidth);
+    }
+//    anim->start();
+    QTimer::singleShot(800,anim,SLOT(start()));
+
+
+    connect(anim,SIGNAL(finished()),anim,SLOT(deleteLater()));
+
+}

@@ -1,0 +1,5 @@
+2016-05-31
+1.编译出现问题 cannot find -lQt5Xlsx30
+	解决方法1：找到Makefile.Release，将其中的“-lQt5Xlsx30”改为“-lQt5Xlsx”
+	解决方法2：将依赖库 “Qt5Xlsx.a” 改为 “Qt5Xlsx30”
+	

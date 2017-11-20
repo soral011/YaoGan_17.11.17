@@ -1,0 +1,1168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ControlPanel</class>
+ <widget class="QWidget" name="ControlPanel">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1026</width>
+    <height>583</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>控制面板</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QPushButton[common=true]{
+border:1px solid  rgb(154, 154, 154);
+	background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.00568182 rgba(225, 225, 225, 255), stop:0.5 rgba(236, 236, 236, 255), stop:1 rgba(225, 225, 225, 255));
+border-radius:1px;
+padding:5px;
+}
+QPushButton[common=true]:hover{
+border:1px solid  rgb(0, 170, 255);
+	background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.00568182 rgba(235, 235, 235, 255), stop:0.5 rgba(246, 246, 246, 255), stop:1 rgba(235, 235, 235, 255));
+border-radius:1px;
+padding:5px;
+}
+
+QPushButton[common=true]:pressed{
+border:1px solid  rgb(200, 200, 200);
+	background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.00568182 rgba(210, 210, 210, 255), stop:0.5 rgba(205, 205, 205, 205), stop:1 rgba(210, 210, 210, 255));
+border-radius:1px;
+padding:5px;
+}</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_3">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>8</number>
+   </property>
+   <property name="topMargin">
+    <number>8</number>
+   </property>
+   <property name="rightMargin">
+    <number>8</number>
+   </property>
+   <property name="bottomMargin">
+    <number>8</number>
+   </property>
+   <item>
+    <widget class="QWidget" name="widget_parent" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_6">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QWidget" name="widget_menu" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>29</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>29</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QWidget#widget_menu{
+margin-top:0px;
+padding-right:9px;
+/*background-color: rgb(230, 230, 230);*/
+background-color: rgb(0, 170, 255);
+/*border-bottom:1px solid qlineargradient(spread:pad, x1:0.5, y1:0, x2:0.5, y2:1, stop:0 rgba(120, 120, 120, 255), stop:1 rgba(255, 255, 255, 255)); */
+}</string>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <property name="spacing">
+          <number>6</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>3</number>
+         </property>
+         <property name="rightMargin">
+          <number>3</number>
+         </property>
+         <property name="bottomMargin">
+          <number>3</number>
+         </property>
+         <item>
+          <widget class="QPushButton" name="pushButton_show_tools">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>70</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border:none;
+color:white;
+background-color:transparent;
+</string>
+           </property>
+           <property name="text">
+            <string>控制面板</string>
+           </property>
+           <property name="common" stdset="0">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_close">
+           <property name="minimumSize">
+            <size>
+             <width>27</width>
+             <height>22</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>27</width>
+             <height>22</height>
+            </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton{
+border-image: url(:/images/close.png);
+}
+QPushButton:hover{
+border-image: url(:/images/close_hover.png);
+}
+QPushButton:pressed{
+border-image: url(:/images/close_pressed.png);
+}</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <property name="leftMargin">
+         <number>45</number>
+        </property>
+        <property name="topMargin">
+         <number>25</number>
+        </property>
+        <property name="rightMargin">
+         <number>45</number>
+        </property>
+        <property name="bottomMargin">
+         <number>20</number>
+        </property>
+        <property name="horizontalSpacing">
+         <number>30</number>
+        </property>
+        <property name="verticalSpacing">
+         <number>20</number>
+        </property>
+        <item row="1" column="0">
+         <widget class="QGroupBox" name="groupBox_adjust_avg_num">
+          <property name="minimumSize">
+           <size>
+            <width>230</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="title">
+           <string>调节平均次数等</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <property name="leftMargin">
+            <number>15</number>
+           </property>
+           <property name="rightMargin">
+            <number>15</number>
+           </property>
+           <item>
+            <layout class="QGridLayout" name="gridLayout">
+             <item row="6" column="2">
+              <widget class="QSpinBox" name="spinBox_tdlas_average_num">
+               <property name="focusPolicy">
+                <enum>Qt::ClickFocus</enum>
+               </property>
+               <property name="value">
+                <number>5</number>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="1">
+              <widget class="QLabel" name="label_5">
+               <property name="text">
+                <string>平均次数</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="2">
+              <widget class="QSpinBox" name="spinBox_opacity_average_num">
+               <property name="focusPolicy">
+                <enum>Qt::ClickFocus</enum>
+               </property>
+               <property name="value">
+                <number>5</number>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QLabel" name="label_6">
+               <property name="text">
+                <string>平均次数</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QLabel" name="label_4">
+               <property name="text">
+                <string>积分时间</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLabel" name="label_18">
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>DOAS：</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="2">
+              <widget class="QSpinBox" name="spinBox_doas_average_num">
+               <property name="focusPolicy">
+                <enum>Qt::ClickFocus</enum>
+               </property>
+               <property name="value">
+                <number>5</number>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QSpinBox" name="spinBox_integration_time">
+               <property name="focusPolicy">
+                <enum>Qt::ClickFocus</enum>
+               </property>
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>1000</number>
+               </property>
+               <property name="value">
+                <number>35</number>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1">
+              <widget class="QLabel" name="label_9">
+               <property name="text">
+                <string>平均次数</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1" colspan="2">
+              <widget class="QLabel" name="label_14">
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">border-top:1px solid lightGray;</string>
+               </property>
+               <property name="text">
+                <string>绿光：</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="1" colspan="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_6">
+               <property name="topMargin">
+                <number>2</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QPushButton" name="pushButton_set_integration_time">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>70</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>设置</string>
+                 </property>
+                 <property name="common" stdset="0">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pushButton_get_integration_time">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>70</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>获取当前配置</string>
+                 </property>
+                 <property name="common" stdset="0">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="5" column="1" colspan="2">
+              <widget class="QLabel" name="label_10">
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">border-top:1px solid lightGray;</string>
+               </property>
+               <property name="text">
+                <string>TDLAS：</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+          <zorder></zorder>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_network_status">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>&lt;font color=blue&gt;网络状态：&lt;font color=red&gt;连接中...&lt;/font&gt;&lt;/font&gt;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QGroupBox" name="groupBox_slave_control">
+          <property name="title">
+           <string>下位机控制</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_8">
+           <property name="leftMargin">
+            <number>15</number>
+           </property>
+           <property name="rightMargin">
+            <number>15</number>
+           </property>
+           <item>
+            <layout class="QGridLayout" name="gridLayout_5">
+             <item row="6" column="0">
+              <spacer name="verticalSpacer_6">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="4" column="0">
+              <widget class="QLabel" name="label_16">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <layout class="QHBoxLayout" name="horizontalLayout_2">
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QComboBox" name="comboBox_tdlas_cmd">
+                 <item>
+                  <property name="text">
+                   <string>2.请求全谱数据数据</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>3.请求浓度数据</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>4.请求系统配置参数</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>6.发送重启指令</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>8.请求系统状态</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="3" column="0">
+              <widget class="QPushButton" name="pushButton_communication_cmd">
+               <property name="minimumSize">
+                <size>
+                 <width>70</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>发送</string>
+               </property>
+               <property name="common" stdset="0">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_8">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>TDLAS 命令</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="0">
+              <widget class="QPushButton" name="pushButton_tdlas_settings">
+               <property name="minimumSize">
+                <size>
+                 <width>90</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>TDLAS配置</string>
+               </property>
+               <property name="common" stdset="0">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_11">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QGroupBox" name="groupBox_9">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>搜索测量主机</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_14">
+           <property name="leftMargin">
+            <number>15</number>
+           </property>
+           <property name="rightMargin">
+            <number>15</number>
+           </property>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_15">
+             <item>
+              <widget class="QPushButton" name="pushButton_search_tester_ip">
+               <property name="minimumSize">
+                <size>
+                 <width>70</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>搜索</string>
+               </property>
+               <property name="common" stdset="0">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="comboBox_tester_ip"/>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_connect_tester">
+               <property name="minimumSize">
+                <size>
+                 <width>70</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>连接</string>
+               </property>
+               <property name="common" stdset="0">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_7">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>8</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_23">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>已连接测量主机名称 ：</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_tester_name">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_19">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>测量主机 IP ：</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_tester_ip">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QGroupBox" name="groupBox_4">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>开关控制</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_5">
+           <property name="leftMargin">
+            <number>15</number>
+           </property>
+           <property name="rightMargin">
+            <number>15</number>
+           </property>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_4">
+             <property name="bottomMargin">
+              <number>9</number>
+             </property>
+             <item>
+              <widget class="QCheckBox" name="checkBox_pump">
+               <property name="text">
+                <string>抽气</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="checkBox_valve1">
+               <property name="text">
+                <string>标气 1（NO）</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="checkBox_valve2">
+               <property name="text">
+                <string>标气 2（HC 等）</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_5">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Preferred</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLabel" name="label_intensity">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color:blue;</string>
+          </property>
+          <property name="text">
+           <string>红外：--  紫外：--  绿光：--</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QGroupBox" name="groupBox_remote_control">
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>远程控制</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_9">
+           <property name="leftMargin">
+            <number>15</number>
+           </property>
+           <property name="rightMargin">
+            <number>15</number>
+           </property>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_2">
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QPushButton" name="pushButton_read_cali_data">
+               <property name="minimumSize">
+                <size>
+                 <width>90</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>读取配置参数</string>
+               </property>
+               <property name="common" stdset="0">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_reboot_tester">
+               <property name="minimumSize">
+                <size>
+                 <width>90</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>重启测量主机</string>
+               </property>
+               <property name="common" stdset="0">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_13">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>8</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="checkBox_start_samba">
+               <property name="text">
+                <string>开启 Samba</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_24">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QGroupBox" name="groupBox_local_tools">
+          <property name="title">
+           <string>本地工具</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_12">
+           <property name="leftMargin">
+            <number>15</number>
+           </property>
+           <property name="rightMargin">
+            <number>15</number>
+           </property>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_13">
+             <item>
+              <widget class="QPushButton" name="pushButton_view_test_spectrum">
+               <property name="minimumSize">
+                <size>
+                 <width>70</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>测量光谱</string>
+               </property>
+               <property name="common" stdset="0">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_view_cali_data">
+               <property name="minimumSize">
+                <size>
+                 <width>70</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>标定数据</string>
+               </property>
+               <property name="common" stdset="0">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_factory_cali">
+               <property name="minimumSize">
+                <size>
+                 <width>70</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>出厂标定</string>
+               </property>
+               <property name="common" stdset="0">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_20">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <widget class="QGroupBox" name="groupBox_use_simulation_spectrum">
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>使用模拟光谱数据</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_16">
+           <property name="leftMargin">
+            <number>15</number>
+           </property>
+           <property name="rightMargin">
+            <number>15</number>
+           </property>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_17">
+             <item>
+              <widget class="QCheckBox" name="checkBox_simulation_tdlas">
+               <property name="text">
+                <string>红外</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="checkBox_simulation_doas">
+               <property name="text">
+                <string>紫外</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="checkBox_simulation_opacity">
+               <property name="text">
+                <string>绿光</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_7">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Preferred</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="3">
+         <widget class="QGroupBox" name="groupBox_others">
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>其他</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_10">
+           <property name="leftMargin">
+            <number>15</number>
+           </property>
+           <property name="rightMargin">
+            <number>15</number>
+           </property>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_7">
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="label_15">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>8</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="checkBox_ignore_camera">
+               <property name="text">
+                <string>不使用抓拍机</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string>设置测量主机名称:</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="lineEdit_set_tester_name">
+               <property name="maxLength">
+                <number>100</number>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_set_tester_name">
+               <property name="text">
+                <string>确定</string>
+               </property>
+               <property name="common" stdset="0">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_25">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

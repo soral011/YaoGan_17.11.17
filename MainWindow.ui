@@ -1,0 +1,2413 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>TestWindow</class>
+ <widget class="QWidget" name="TestWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1059</width>
+    <height>699</height>
+   </rect>
+  </property>
+  <property name="mouseTracking">
+   <bool>false</bool>
+  </property>
+  <property name="windowTitle">
+   <string>机动车尾气检测</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="img.qrc">
+    <normaloff>:/images/app_logo2.png</normaloff>:/images/app_logo2.png</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget#TestWindow{
+/*background-color: rgb(255, 255, 255);*/
+}
+
+
+
+QPushButton[minimize=true]{
+border-image: url(:/images/min.png);
+}
+QPushButton[minimize=true]:hover{
+border-image: url(:/images/min_hover.png);
+}
+QPushButton[minimize=true]:pressed{
+border-image: url(:/images/min_pressed.png);
+}
+
+QPushButton[close=true]{
+border-image: url(:/images/close.png);
+}
+QPushButton[close=true]:hover{
+border-image: url(:/images/close_hover.png);
+}
+QPushButton[close=true]:pressed{
+border-image: url(:/images/close_pressed.png);
+}</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>6</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QWidget" name="horizontalWidget" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>45</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QWidget#horizontalWidget{
+margin-top:0px;
+padding-right:9px;
+/*background-color: rgb(230, 230, 230);*/
+background-color: rgb(0, 170, 255);
+/*border-bottom:1px solid qlineargradient(spread:pad, x1:0.5, y1:0, x2:0.5, y2:1, stop:0 rgba(120, 120, 120, 255), stop:1 rgba(255, 255, 255, 255)); */
+}</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="label_9">
+        <property name="minimumSize">
+         <size>
+          <width>51</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLabel{
+border-image: url(:/images/app_logo2.png);
+margin:2px;
+margin-left:8px;
+
+}</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_main_menu">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <family>微软雅黑</family>
+          <pointsize>11</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::RightToLeft</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton{
+color:white;
+border:none;
+padding-left:16px;
+padding-right:16px;
+}
+</string>
+        </property>
+        <property name="text">
+         <string>机动车尾气监测</string>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>13</width>
+          <height>13</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_settings">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <family>微软雅黑</family>
+          <pointsize>9</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
+         </font>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::RightToLeft</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton{
+background-color: rgba(0, 0, 0, 25);
+color:white;
+border:none;
+padding-left:16px;
+padding-right:16px;
+}
+
+QPushButton::hover{
+color:white;
+border:none;
+padding-left:16px;
+padding-right:16px;
+background-color: rgba(0, 0, 0, 25);
+}
+
+QPushButton::pressed{
+color:white;
+border:none;
+padding-left:16px;
+padding-right:16px;
+background-color: rgba(0, 0, 0, 65);
+}</string>
+        </property>
+        <property name="text">
+         <string>设置</string>
+        </property>
+        <property name="icon">
+         <iconset resource="img.qrc">
+          <normaloff>:/images/arrow_down.png</normaloff>:/images/arrow_down.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>13</width>
+          <height>13</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_calibrate">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <family>微软雅黑</family>
+          <pointsize>9</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
+         </font>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::RightToLeft</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton{
+color:white;
+border:none;
+padding-left:16px;
+padding-right:16px;
+}
+
+QPushButton::hover{
+color:white;
+border:none;
+padding-left:16px;
+padding-right:16px;
+background-color: rgba(0, 0, 0, 25);
+}
+
+QPushButton::pressed{
+color:white;
+border:none;
+padding-left:16px;
+padding-right:16px;
+background-color: rgba(0, 0, 0, 65);
+}</string>
+        </property>
+        <property name="text">
+         <string>标定</string>
+        </property>
+        <property name="icon">
+         <iconset resource="img.qrc">
+          <normaloff>:/images/arrow_down.png</normaloff>:/images/arrow_down.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>13</width>
+          <height>13</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_manage">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <family>微软雅黑</family>
+          <pointsize>9</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
+         </font>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::RightToLeft</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton{
+color:white;
+border:none;
+padding-left:16px;
+padding-right:16px;
+}
+
+QPushButton::hover{
+color:white;
+border:none;
+padding-left:16px;
+padding-right:16px;
+background-color: rgba(0, 0, 0, 25);
+}
+
+QPushButton::pressed{
+color:white;
+border:none;
+padding-left:16px;
+padding-right:16px;
+background-color: rgba(0, 0, 0, 65);
+}</string>
+        </property>
+        <property name="text">
+         <string>管理</string>
+        </property>
+        <property name="icon">
+         <iconset resource="img.qrc">
+          <normaloff>:/images/arrow_down.png</normaloff>:/images/arrow_down.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>13</width>
+          <height>13</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_tools">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <family>微软雅黑</family>
+          <pointsize>9</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
+         </font>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::RightToLeft</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton{
+color:white;
+border:none;
+padding-left:16px;
+padding-right:16px;
+}
+
+QPushButton::hover{
+color:white;
+border:none;
+padding-left:16px;
+padding-right:16px;
+background-color: rgba(0, 0, 0, 25);
+}
+
+QPushButton::pressed{
+color:white;
+border:none;
+padding-left:16px;
+padding-right:16px;
+background-color: rgba(0, 0, 0, 65);
+}</string>
+        </property>
+        <property name="text">
+         <string>工具</string>
+        </property>
+        <property name="icon">
+         <iconset resource="img.qrc">
+          <normaloff>:/images/arrow_down.png</normaloff>:/images/arrow_down.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>13</width>
+          <height>13</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_help">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <family>微软雅黑</family>
+          <pointsize>9</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
+         </font>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::RightToLeft</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton{
+color:white;
+border:none;
+padding-left:16px;
+padding-right:16px;
+}
+
+QPushButton::hover{
+color:white;
+border:none;
+padding-left:16px;
+padding-right:16px;
+background-color: rgba(0, 0, 0, 25);
+}
+
+QPushButton::pressed{
+color:white;
+border:none;
+padding-left:16px;
+padding-right:16px;
+background-color: rgba(0, 0, 0, 65);
+}</string>
+        </property>
+        <property name="text">
+         <string>帮助</string>
+        </property>
+        <property name="icon">
+         <iconset resource="img.qrc">
+          <normaloff>:/images/arrow_down.png</normaloff>:/images/arrow_down.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>13</width>
+          <height>13</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <property name="leftMargin">
+         <number>9</number>
+        </property>
+        <property name="topMargin">
+         <number>3</number>
+        </property>
+        <property name="rightMargin">
+         <number>3</number>
+        </property>
+        <property name="bottomMargin">
+         <number>3</number>
+        </property>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_minimize">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>27</width>
+            <height>22</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>27</width>
+            <height>22</height>
+           </size>
+          </property>
+          <property name="focusPolicy">
+           <enum>Qt::NoFocus</enum>
+          </property>
+          <property name="toolTip">
+           <string>最小化</string>
+          </property>
+          <property name="styleSheet">
+           <string notr="true"/>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="minimize" stdset="0">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_close">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>27</width>
+            <height>22</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>27</width>
+            <height>22</height>
+           </size>
+          </property>
+          <property name="focusPolicy">
+           <enum>Qt::NoFocus</enum>
+          </property>
+          <property name="toolTip">
+           <string>关闭</string>
+          </property>
+          <property name="styleSheet">
+           <string notr="true"/>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="close" stdset="0">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QStackedWidget" name="stackedWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="page_test">
+      <layout class="QVBoxLayout" name="verticalLayout_7">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QWidget" name="widget_blocks_parent" native="true">
+         <layout class="QGridLayout" name="gridLayout">
+          <property name="leftMargin">
+           <number>9</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>9</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <property name="spacing">
+           <number>12</number>
+          </property>
+          <item row="0" column="3">
+           <widget class="QWidget" name="widget_show_vedio_parent" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>4</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="mouseTracking">
+             <bool>false</bool>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QWidget#widget_show_vedio_parent
+{
+border:1px solid lightGray;
+
+}</string>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_3">
+             <property name="spacing">
+              <number>2</number>
+             </property>
+             <property name="leftMargin">
+              <number>1</number>
+             </property>
+             <property name="topMargin">
+              <number>1</number>
+             </property>
+             <property name="rightMargin">
+              <number>1</number>
+             </property>
+             <property name="bottomMargin">
+              <number>1</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="label">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>36</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="mouseTracking">
+                <bool>true</bool>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(250, 250, 250);
+padding-left:8px;</string>
+               </property>
+               <property name="text">
+                <string>图像浏览</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QWidget" name="widget_show_vedio" native="true">
+               <property name="mouseTracking">
+                <bool>true</bool>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_6">
+                <property name="spacing">
+                 <number>0</number>
+                </property>
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QWidget" name="widget_capture_car_img" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>4</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QWidget#widget_capture_car_img
+{
+border:1px solid lightGray;
+
+}</string>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_4">
+             <property name="spacing">
+              <number>2</number>
+             </property>
+             <property name="leftMargin">
+              <number>1</number>
+             </property>
+             <property name="topMargin">
+              <number>1</number>
+             </property>
+             <property name="rightMargin">
+              <number>1</number>
+             </property>
+             <property name="bottomMargin">
+              <number>1</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="label_4">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>36</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(250, 250, 250);
+padding-left:8px;</string>
+               </property>
+               <property name="text">
+                <string>车牌抓拍</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_show_capture_img">
+               <property name="styleSheet">
+                <string notr="true">background-color:#fefefe;</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="0" column="0" rowspan="2">
+           <widget class="QWidget" name="widget_test_result" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>3</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QWidget#widget_test_result
+{
+border:1px solid lightGray;
+
+}</string>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_2">
+             <property name="spacing">
+              <number>2</number>
+             </property>
+             <property name="leftMargin">
+              <number>1</number>
+             </property>
+             <property name="topMargin">
+              <number>1</number>
+             </property>
+             <property name="rightMargin">
+              <number>1</number>
+             </property>
+             <property name="bottomMargin">
+              <number>1</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="label_10">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>36</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(250, 250, 250);
+padding-left:8px;</string>
+               </property>
+               <property name="text">
+                <string>监测结果</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QWidget" name="widget_3" native="true">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>5</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color:#fefefe;</string>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_3">
+                <property name="leftMargin">
+                 <number>1</number>
+                </property>
+                <property name="topMargin">
+                 <number>48</number>
+                </property>
+                <property name="rightMargin">
+                 <number>1</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>58</number>
+                </property>
+                <property name="horizontalSpacing">
+                 <number>10</number>
+                </property>
+                <property name="verticalSpacing">
+                 <number>8</number>
+                </property>
+                <item row="11" column="0">
+                 <widget class="QLabel" name="label_car_acceleration_9">
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>15</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true"/>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="3">
+                 <widget class="QLabel" name="label_car_licence">
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>16</pointsize>
+                    <weight>75</weight>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true"/>
+                  </property>
+                  <property name="text">
+                   <string>--</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="11" column="1">
+                 <widget class="QLabel" name="label_37">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>15</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">padding-left:10px;</string>
+                  </property>
+                  <property name="text">
+                   <string>HC</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="9" column="1">
+                 <widget class="QLabel" name="label_28">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>15</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">padding-left:10px;</string>
+                  </property>
+                  <property name="text">
+                   <string>CO</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="13" column="2">
+                 <widget class="QLabel" name="label_48">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>15</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">color: gray;</string>
+                  </property>
+                  <property name="text">
+                   <string>：</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="2">
+                 <widget class="QLabel" name="label_36">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>15</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">color: gray;</string>
+                  </property>
+                  <property name="text">
+                   <string>：</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="7" column="2">
+                 <widget class="QLabel" name="label_38">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>15</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">color: gray;</string>
+                  </property>
+                  <property name="text">
+                   <string>：</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="7" column="1">
+                 <widget class="QLabel" name="label_27">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>15</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">padding-left:10px;</string>
+                  </property>
+                  <property name="text">
+                   <string>CO2</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QLabel" name="label_7">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>15</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">padding-left:10px;</string>
+                  </property>
+                  <property name="text">
+                   <string>车牌</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="10" column="2">
+                 <widget class="QLabel" name="label_41">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>15</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">color: gray;</string>
+                  </property>
+                  <property name="text">
+                   <string>：</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="11" column="2">
+                 <widget class="QLabel" name="label_42">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>15</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">color: gray;</string>
+                  </property>
+                  <property name="text">
+                   <string>：</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="9" column="3">
+                 <widget class="QLabel" name="label_result_CO">
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>15</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true"/>
+                  </property>
+                  <property name="text">
+                   <string>--</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="9" column="2">
+                 <widget class="QLabel" name="label_40">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>15</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">color: gray;</string>
+                  </property>
+                  <property name="text">
+                   <string>：</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="11" column="3">
+                 <widget class="QLabel" name="label_result_HC">
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>15</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true"/>
+                  </property>
+                  <property name="text">
+                   <string>--</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="10" column="3">
+                 <widget class="QLabel" name="label_result_NO">
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>15</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true"/>
+                  </property>
+                  <property name="text">
+                   <string>--</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="11" column="4">
+                 <widget class="QLabel" name="label_car_acceleration_8">
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>15</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true"/>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1" colspan="3">
+                 <widget class="QLabel" name="label_11">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>1</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">border-bottom:1px solid lightGray;</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+                <item row="13" column="3">
+                 <widget class="QLabel" name="label_result_passtime">
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>15</pointsize>
+                    <weight>50</weight>
+                    <italic>false</italic>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true"/>
+                  </property>
+                  <property name="text">
+                   <string>--</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="1" colspan="3">
+                 <widget class="QLabel" name="label_8">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>1</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">border-bottom:1px solid lightGray;</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+                <item row="12" column="1" colspan="3">
+                 <widget class="QLabel" name="label_13">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>1</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">border-bottom:1px solid lightGray;</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+                <item row="14" column="1" colspan="3">
+                 <widget class="QLabel" name="label_14">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>1</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">border-bottom:1px solid lightGray;</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+                <item row="10" column="1">
+                 <widget class="QLabel" name="label_29">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>15</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">padding-left:10px;</string>
+                  </property>
+                  <property name="text">
+                   <string>NO</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QLabel" name="label_39">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>15</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">padding-left:10px;</string>
+                  </property>
+                  <property name="text">
+                   <string>状态</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="2">
+                 <widget class="QLabel" name="label_43">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>15</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">color: gray;</string>
+                  </property>
+                  <property name="text">
+                   <string>：</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="3">
+                 <widget class="QLabel" name="label_car_state">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>30</pointsize>
+                    <weight>75</weight>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true"/>
+                  </property>
+                  <property name="text">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;--&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="7" column="3">
+                 <widget class="QLabel" name="label_result_CO2">
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>15</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true"/>
+                  </property>
+                  <property name="text">
+                   <string>--</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="1">
+                 <widget class="QLabel" name="label_44">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>15</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">padding-left:10px;</string>
+                  </property>
+                  <property name="text">
+                   <string>黑度</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="3">
+                 <widget class="QLabel" name="label_result_opacity">
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>15</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true"/>
+                  </property>
+                  <property name="text">
+                   <string>--</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="2">
+                 <widget class="QLabel" name="label_45">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>15</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">color: gray;</string>
+                  </property>
+                  <property name="text">
+                   <string>：</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="13" column="1">
+                 <widget class="QLabel" name="label_49">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>15</pointsize>
+                    <weight>50</weight>
+                    <italic>false</italic>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">padding-left:10px;</string>
+                  </property>
+                  <property name="text">
+                   <string>时间</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="1">
+                 <widget class="QLabel" name="label_47">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>15</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">padding-left:10px;</string>
+                  </property>
+                  <property name="text">
+                   <string>车速</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="2">
+                 <widget class="QLabel" name="label_46">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>15</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">color: gray;</string>
+                  </property>
+                  <property name="text">
+                   <string>：</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="3">
+                 <widget class="QLabel" name="label_car_speed">
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>15</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true"/>
+                  </property>
+                  <property name="text">
+                   <string>--</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="0" column="4" rowspan="2">
+           <widget class="QLabel" name="label_vertical_spacer">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2" colspan="2">
+           <widget class="QWidget" name="verticalWidget_test_result_list_parent" native="true">
+            <property name="styleSheet">
+             <string notr="true">.QWidget{
+border:1px solid lightGray;
+}</string>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_5">
+             <property name="spacing">
+              <number>2</number>
+             </property>
+             <property name="leftMargin">
+              <number>1</number>
+             </property>
+             <property name="topMargin">
+              <number>1</number>
+             </property>
+             <property name="rightMargin">
+              <number>1</number>
+             </property>
+             <property name="bottomMargin">
+              <number>1</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="label_6">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>36</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(250, 250, 250);
+padding-left:8px;</string>
+               </property>
+               <property name="text">
+                <string>历史记录</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QTableWidget" name="tableWidget_test_result_list">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="focusPolicy">
+                <enum>Qt::ClickFocus</enum>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QTableWidget{
+border:0px solid lightGray;
+
+}
+
+QHeaderView::section {
+background-color:white;
+border:1px solid lightGray;
+border-left:none;
+padding : 5px;
+}
+
+QHeaderView::section:pressed {
+background-color:lightGray;
+border:1px solid lightGray;
+border-left:none;
+padding : 5px;
+}
+
+
+QScrollBar:horizontal {
+border: none;
+background-color: rgba(195, 195, 195, 10);
+height: 12px;
+margin: 0px 0 0px 0;
+}
+
+QScrollBar::handle:horizontal {
+border: none;
+border-radius:6px;
+background: rgba(154, 154, 154, 150);
+min-width: 15px;
+}
+QScrollBar::handle:horizontal:hover {
+border: none;
+border-radius:6px;
+background-color: rgb(211, 213, 244);
+min-width: 15px;
+}
+QScrollBar::sub-line:horizontal {
+border: none;
+width: 0px;
+subcontrol-position: left;
+subcontrol-origin: margin;
+}
+QScrollBar::add-line:horizontal {
+border: none;
+width: 0px;
+subcontrol-position: right;
+subcontrol-origin: margin;
+}
+QScrollBar::up-arrow:horizontal, QScrollBar::down-arrow:horizontal {
+border:none;
+width: 0px;
+height: 0px;
+}
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+background: none;
+}
+
+
+
+QScrollBar:vertical {
+border: none;
+background-color: rgba(195, 195, 195, 10);
+width: 12px;
+margin: 0px 0 0px 0;
+}
+QScrollBar::handle:vertical {
+border: none;
+border-radius:6px;
+background: rgba(154, 154, 154, 150);
+min-height: 35px;
+}
+QScrollBar::handle:vertical:hover {
+border: none;
+border-radius:6px;
+background-color: rgb(211, 213, 244);
+min-height: 35px;
+}
+QScrollBar::sub-line:vertical {
+border: none;
+height: 0px;
+subcontrol-position: top;
+subcontrol-origin: margin;
+}
+QScrollBar::add-line:vertical {
+border: none;
+height: 0px;
+subcontrol-position: bottom;
+subcontrol-origin: margin;
+}
+QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
+border:none;
+width: 0px;
+height: 0px;
+}
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+background: none;
+}</string>
+               </property>
+               <property name="editTriggers">
+                <set>QAbstractItemView::NoEditTriggers</set>
+               </property>
+               <property name="selectionMode">
+                <enum>QAbstractItemView::SingleSelection</enum>
+               </property>
+               <property name="selectionBehavior">
+                <enum>QAbstractItemView::SelectRows</enum>
+               </property>
+               <property name="sortingEnabled">
+                <bool>false</bool>
+               </property>
+               <attribute name="horizontalHeaderVisible">
+                <bool>false</bool>
+               </attribute>
+               <attribute name="horizontalHeaderCascadingSectionResizes">
+                <bool>false</bool>
+               </attribute>
+               <attribute name="horizontalHeaderDefaultSectionSize">
+                <number>100</number>
+               </attribute>
+               <attribute name="horizontalHeaderHighlightSections">
+                <bool>true</bool>
+               </attribute>
+               <attribute name="horizontalHeaderMinimumSectionSize">
+                <number>30</number>
+               </attribute>
+               <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+                <bool>false</bool>
+               </attribute>
+               <attribute name="verticalHeaderVisible">
+                <bool>false</bool>
+               </attribute>
+               <attribute name="verticalHeaderDefaultSectionSize">
+                <number>30</number>
+               </attribute>
+               <row>
+                <property name="text">
+                 <string>New Row</string>
+                </property>
+               </row>
+               <row>
+                <property name="text">
+                 <string>New Row</string>
+                </property>
+               </row>
+               <row>
+                <property name="text">
+                 <string>New Row</string>
+                </property>
+               </row>
+               <row>
+                <property name="text">
+                 <string>New Row</string>
+                </property>
+               </row>
+               <row>
+                <property name="text">
+                 <string>New Row</string>
+                </property>
+               </row>
+               <row>
+                <property name="text">
+                 <string>New Row</string>
+                </property>
+               </row>
+               <row>
+                <property name="text">
+                 <string>New Row</string>
+                </property>
+               </row>
+               <row>
+                <property name="text">
+                 <string>New Row</string>
+                </property>
+               </row>
+               <row>
+                <property name="text">
+                 <string>New Row</string>
+                </property>
+               </row>
+               <row>
+                <property name="text">
+                 <string>New Row</string>
+                </property>
+               </row>
+               <row>
+                <property name="text">
+                 <string>New Row</string>
+                </property>
+               </row>
+               <row>
+                <property name="text">
+                 <string>New Row</string>
+                </property>
+               </row>
+               <row>
+                <property name="text">
+                 <string>New Row</string>
+                </property>
+               </row>
+               <row>
+                <property name="text">
+                 <string>New Row</string>
+                </property>
+               </row>
+               <column>
+                <property name="text">
+                 <string>New Column</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>New Column</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>New Column</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>New Column</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>New Column</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>New Column</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>New Column</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>New Column</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>New Column</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>New Column</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>New Column</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>New Column</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>New Column</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>New Column</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>New Column</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>New Column</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>New Column</string>
+                </property>
+               </column>
+               <item row="0" column="0">
+                <property name="text">
+                 <string>1</string>
+                </property>
+               </item>
+               <item row="3" column="3">
+                <property name="text">
+                 <string>6</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="page_start">
+      <layout class="QVBoxLayout" name="verticalLayout_8">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <property name="bottomMargin">
+          <number>50</number>
+         </property>
+         <item>
+          <spacer name="horizontalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_start_test">
+           <property name="minimumSize">
+            <size>
+             <width>300</width>
+             <height>130</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>微软雅黑</family>
+             <pointsize>28</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>开始监测</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_4">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="page_connection_status">
+      <layout class="QHBoxLayout" name="horizontalLayout_7">
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <property name="topMargin">
+          <number>10</number>
+         </property>
+         <item>
+          <widget class="QWidget" name="verticalWidget" native="true">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>802</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QWidget#verticalWidget
+{
+border:1px solid lightGray;
+
+}</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_10">
+            <property name="spacing">
+             <number>2</number>
+            </property>
+            <property name="leftMargin">
+             <number>1</number>
+            </property>
+            <property name="topMargin">
+             <number>1</number>
+            </property>
+            <property name="rightMargin">
+             <number>1</number>
+            </property>
+            <property name="bottomMargin">
+             <number>1</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="label_title">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>50</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>15</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(250, 250, 250);
+padding-left:9px;</string>
+              </property>
+              <property name="text">
+               <string>网络连接状态</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QWidget" name="widget_connection_status" native="true">
+              <property name="minimumSize">
+               <size>
+                <width>800</width>
+                <height>512</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QWidget#widget_connection_status{
+background-color: rgb(250, 250, 250);
+}</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QWidget" name="widget" native="true">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>36</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>36</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">.QWidget{
+background-color: rgb(250, 250, 250);
+
+}</string>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_9">
+               <property name="spacing">
+                <number>12</number>
+               </property>
+               <property name="topMargin">
+                <number>3</number>
+               </property>
+               <property name="rightMargin">
+                <number>9</number>
+               </property>
+               <property name="bottomMargin">
+                <number>3</number>
+               </property>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="widget_tips" native="true">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>22</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QWidget#widget_tips{
+margin-top:0px;
+padding-right:9px;
+/*background-color: rgb(235, 235, 235);*/
+/*background-color: rgb(0, 170, 255);*/
+}</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>3</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="label_tester_info">
+        <property name="minimumSize">
+         <size>
+          <width>80</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_6">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="checkBox_is_save_test_result">
+        <property name="text">
+         <string>保存测量结果</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_create_one_test_result">
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="text">
+         <string>生成一条监测记录</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_6">
+        <property name="spacing">
+         <number>6</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="label_wind_speed">
+          <property name="minimumSize">
+           <size>
+            <width>80</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>风速：--m/s</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_wind_direction">
+          <property name="minimumSize">
+           <size>
+            <width>85</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>风向：--度</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_temprature">
+          <property name="minimumSize">
+           <size>
+            <width>80</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>温度：--℃</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_humidity">
+          <property name="minimumSize">
+           <size>
+            <width>80</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>湿度：--%</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_atmosphere">
+          <property name="minimumSize">
+           <size>
+            <width>103</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>大气压：--hPa</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="img.qrc"/>
+ </resources>
+ <connections/>
+</ui>

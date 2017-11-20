@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>TdlasSettings</class>
+ <widget class="QWidget" name="TdlasSettings">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>404</width>
+    <height>431</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>TDLAS 系统配置</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <property name="verticalSpacing">
+      <number>20</number>
+     </property>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>工作模式</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>电流调制值</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="4">
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_average_num">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>26</height>
+        </size>
+       </property>
+       <property name="decimals">
+        <number>0</number>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="3">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>增益调节</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="3">
+      <widget class="QLabel" name="label_8">
+       <property name="text">
+        <string>累加次数</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="4">
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_gain">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>26</height>
+        </size>
+       </property>
+       <property name="decimals">
+        <number>0</number>
+       </property>
+       <property name="maximum">
+        <double>255.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLabel" name="label_9">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_scan_current_range">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>26</height>
+        </size>
+       </property>
+       <property name="decimals">
+        <number>0</number>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="3">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>相位调节</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="4">
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_phase">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>26</height>
+        </size>
+       </property>
+       <property name="decimals">
+        <number>0</number>
+       </property>
+       <property name="maximum">
+        <double>360.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="4">
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_current">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>26</height>
+        </size>
+       </property>
+       <property name="decimals">
+        <number>0</number>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_work_mode">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>26</height>
+        </size>
+       </property>
+       <property name="decimals">
+        <number>0</number>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_temperature">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>26</height>
+        </size>
+       </property>
+       <property name="singleStep">
+        <double>0.020000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>固定温度</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_scan_current_start">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>26</height>
+        </size>
+       </property>
+       <property name="decimals">
+        <number>0</number>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>电流起始值</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>电流扫描跨度值</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QPushButton" name="pushButton_backup_settings">
+       <property name="text">
+        <string>备份</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QPushButton" name="pushButton_get_settings">
+       <property name="text">
+        <string>获取当前配置</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="4">
+      <widget class="QPushButton" name="pushButton_recover_settings">
+       <property name="text">
+        <string>恢复</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <property name="topMargin">
+      <number>20</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="label_10">
+       <property name="text">
+        <string>操作记录</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPlainTextEdit" name="plainTextEdit"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="label_tester_info">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_clear_plainText">
+       <property name="text">
+        <string>清除</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

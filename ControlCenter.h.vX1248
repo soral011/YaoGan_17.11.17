@@ -1,0 +1,155 @@
+/***********************************************************
+**
+** class: ControlCenter
+**
+** 作者：lth
+** 日期：2016-03-21
+**
+** 作为整个软件的控制中心，负责收发、存储检测数据
+**
+************************************************************/
+
+#ifndef CONTROLCENTER_H
+#define CONTROLCENTER_H
+#include <QObject>
+#include "SocketClient.h"
+#include "Calibration.h"
+#include "MainWindow.h"
+#include "AccessDatabase.h"
+#include "Weather.h"
+#include "Global.h"
+#include <QtXlsx/QtXlsx>
+
+//保存测量结果对应的光谱光强
+class SaveTestSpectrum:public QThread
+{
+public:
+    NetTestSpectrum m_testSpectrum;
+    QString m_license;
+
+private:
+    void run()
+    {
+        MY_DEBUG("start");
+        QString date = QDateTime::currentDateTime().toString("yyyy-MM-dd");
+        QXlsx::Document xlsx(RESULT_SAVE_PATH + QString("Spectrum_%1.xlsx").arg(date));
+        int rowCount = xlsx.read("W1").toInt(); //记录总数存储在“W1”
+        if(rowCount == 0)
+        {
+           //车牌号	DOAS	DOAS_Bg	TDLAS	TDLAS_Bg	Opacity	Opacity_Bg
+           xlsx.write("A1", "时间");
+           xlsx.write("B1", "车牌号");
+           xlsx.write("C1", "DOAS");
+           xlsx.write("D1", "DOAS_Bg");
+           xlsx.write("E1", "TDLAS");
+           xlsx.write("F1", "TDLAS_Bg");
+           xlsx.write("G1", "Opacity");
+           xlsx.write("H1", "Opacity_Bg");
+
+           rowCount = 1;
+        }
+
+        rowCount += 1;
+        int row = rowCount ; //使用列名称A、B、C...时，row是从1开始的
+
+        QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz");
+        xlsx.write(QString("A%1").arg(row),time);
+
+        xlsx.write(QString("B%1").arg(row),m_license);
+
+
+        QString str;
+        foreach(float f, m_testSpectrum.m_doasSpectrum)
+        {
+            str.append(QString().setNum(f) + " ");
+        }
+        xlsx.write(QString("C%1").arg(row),str);
+
+
+        str.clear();
+        foreach(float f, m_testSpectrum.m_doasSpectrumBg)
+        {
+            str.append(QString().setNum(f) + " ");
+        }
+        xlsx.write(QString("D%1").arg(row), str);
+
+        str.clear();
+        foreach(int i, m_testSpectrum.m_tdlasSpectrum)
+        {
+            str.append(QString().setNum(i) + " ");            
+        }
+        xlsx.write(QString("E%1").arg(row), str);
+
+        str.clear();
+        foreach(int i, m_testSpectrum.m_tdlasSpectrumBg)
+        {
+            str.append(QString().setNum(i) + " ");
+        }
+        xlsx.write(QString("F%1").arg(row), str);
+
+        str.clear();
+        foreach(int i, m_testSpectrum.m_opacityADResults)
+        {
+            str.append(QString().setNum(i) + " ");
+        }
+        xlsx.write(QString("G%1").arg(row), str);
+
+        str.clear();
+        foreach(int i, m_testSpectrum.m_opacityADResultsBg)
+        {
+            str.append(QString().setNum(i) + " ");
+        }
+        xlsx.write(QString("H%1").arg(row), str);
+
+
+        xlsx.write(QString("W1"), row);
+
+        xlsx.save();
+        MY_DEBUG("end");
+    }
+};
+
+class ControlCenter:public QObject
+{
+    Q_OBJECT
+
+private:
+    AccessDatabase m_accessDatabase;
+    SocketClient   m_socketClient;
+    MainWindow     m_mainWindow;
+    Weather        m_weather;
+
+    WeatherReport  m_weatherReport;
+
+    CarTestResults m_carTestResults;
+    NetTestSpectrum m_testSpectrum;
+
+    QList<PropertyAndVariant> m_testResultList;
+
+    qint64         m_triggerTime; //触发时间
+    qint64         m_captureTime; //抓拍时间
+    qint64         m_gasTime;     //接收到尾气检测结果时间
+
+    SaveTestSpectrum m_saveTestSpectrum; //用于保存测量、背景光谱
+
+public:
+    ControlCenter();
+
+private:
+    bool isTimeReasonable();
+    void processTestResults();
+    void appendResult(QString property, QVariant variant);
+    bool isPassed(float vsp);
+    float calcVSP();
+
+signals:
+    void testResultReady(CarTestResults oneCarResults);
+
+private slots:
+    void updateWeather(WeatherReport data);
+    void receiveCaptureInfo(CaptureResults my_NET_ITS_PLATE_RESULT);
+    void dataPacketReady(SocketPacket socketPacket);
+//    void hasClient(bool);
+};
+
+#endif // CONTROLCENTER_H
