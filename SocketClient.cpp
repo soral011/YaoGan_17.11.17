@@ -591,7 +591,7 @@ void SocketClient::send(QByteArray data,QByteArray dataType)
 
     if(NET_DATA_TYPE_SET_THREE_POINT == dataType)
     {
-        MY_DEBUG("data:"<<data.toHex());
+        MY_DEBUG("data:"<<data);
         MY_DEBUG("nwrite = "<<nwrite);
     }
 }

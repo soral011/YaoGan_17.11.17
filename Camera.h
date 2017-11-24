@@ -66,6 +66,7 @@ private:
     LONG   m_lListenHandle;
     QString m_cameraIp;
     QProcess *m_process;
+    CaptureResults m_captureResults;
 
 
 public:
@@ -77,6 +78,7 @@ public:
     QStringList getAllOnlineIP();
     QStringList getSameSectionIp(QString ip);
 //    bool scanPort(char *Ip, int port);
+    QPixmap processPixmap(QPixmap mapIn, CaptureResults captureResults);
 
 private:
     void run();

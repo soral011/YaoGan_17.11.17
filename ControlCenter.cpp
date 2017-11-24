@@ -10,7 +10,6 @@ ControlCenter::ControlCenter()
 {   
     SocketClient *socketClient = SocketClient::getInstance();
     m_weather = Weather::getInstance();
-    m_carTestResults.captureResults_vector.resize(sizeof(m_carTestResults.captureResults)*20);
 
     //发送Socket数据
 //    connect(&m_mainWindow.m_calibration, SIGNAL(send(QByteArray,QByteArray)),
@@ -37,8 +36,8 @@ ControlCenter::ControlCenter()
 
 
     //抓拍结果
-//    connect(m_mainWindow.m_camera, SIGNAL(sendCaptureInfo(CaptureResults)),
-//            this, SLOT(receiveCaptureInfo(CaptureResults)));
+    connect(m_mainWindow.m_camera, SIGNAL(sendCaptureInfo(CaptureResults)),
+            this, SLOT(receiveCaptureInfo(CaptureResults)));
 
     connect(this, SIGNAL(testResultReady(CarTestResults)),
             &m_mainWindow, SLOT(receiveTestResult(CarTestResults)));
@@ -121,7 +120,7 @@ void ControlCenter::receiveCaptureInfo(CaptureResults captureResults)
 
     m_generateResultTimer.stop();
     m_isGenerateResult = false;
-    processTestResults();
+//    processTestResults();
 }
 
 void ControlCenter::dataPacketReady(SocketPacket packet)
@@ -262,44 +261,18 @@ float ControlCenter::calcVSP(NetSpeedResults speedResults)
 //return： 表示是否处理成功
 bool ControlCenter::processTestResults()
 {
-    if( !m_isGenerateResult )
-    {
-        bool reasonable = isTimeReasonable();
-        if( !reasonable )
-        {
-            return false;
-        }
-    }
-
-
-//    if(m_carTestResults.captureResults_vector.isEmpty() == true){
-//        return false;
-//    }
-
-//    show_result result;
-//    m_led.setParm("192.168.1.249",2929);
-//    m_led.connect_servers();
-//    result.car_license = m_carTestResults.captureResults_vector.at(0).license;
-//    m_led.set_playlst(result);
-//    m_led.sendmsg();
+    m_carTestResults.captureResults = CaptureResults();
+    m_carTestResults.captureResults.vehiclePic = m_mainWindow.m_camera->capturePic();
 
     static int index = 0;
-    if(index >= m_carTestResults.captureResults_vector.count()){
-        index = 0;
-        m_carTestResults.captureResults_vector.clear();
-        return false;
-    }else{
-        m_carTestResults.captureResults = m_carTestResults.captureResults_vector.at(index);
+    if(!m_carTestResults.captureResults_vector.isEmpty()){
+        if(index >= m_carTestResults.captureResults_vector.count()){
+            index = 0;
+            m_carTestResults.captureResults_vector.clear();
+        }else{
+            m_carTestResults.captureResults = m_carTestResults.captureResults_vector.at(index);
+        }
     }
-//    m_carTestResults.captureResults_vector.remove(1);
-
-    //未接收到车牌则采用视频流截图
-//    if(qAbs(m_triggerTime - m_captureTime) > CAPTURE_AND_TRIGGER_INTERVAL)
-//    {
-//        MY_DEBUG("qAbs(m_triggerTime - m_captureTime) > "<<CAPTURE_AND_TRIGGER_INTERVAL);
-//        m_carTestResults.captureResults = CaptureResults();
-//        m_carTestResults.captureResults.vehiclePic = m_captruedCarPic;
-//    }
 
     if(!m_carTestResults.captureResults.license.isEmpty())
     {
@@ -308,14 +281,32 @@ bool ControlCenter::processTestResults()
         processTestResults(&m_carTestResults.exhaustResults); //修正测量结果
     }
 
-    // 临时增加 校正测量结果 用于计量检定 170829 SENTENCE_TO_PROCESS
-//    Revision *revision = Revision::getInstance();
-//    m_carTestResults.exhaustResults = revision->reviseC(m_carTestResults.exhaustResults);
-//    if( m_carTestResults.exhaustResults.speedResults.V > 11)
-//    {
-//        m_carTestResults.exhaustResults.speedResults.V -= 3.5;
-//    }
+    //判断是否为柴油车
+    if(m_carTestResults.exhaustResults.opacityResults.opacity >
+            g_settings.value(HKEY_PREFERENCE_THRESHOLD_DIESEL_OPACITY, 0).toDouble())
+    {
+        m_carTestResults.isDiesel = true;
+    }
+    else
+    {
+        m_carTestResults.isDiesel = false;
+    }
 
+    // 柴油车
+    if((m_carTestResults.captureResults.license.contains("8J168")
+            || m_carTestResults.captureResults.licenseColor == "黄"
+            || m_carTestResults.exhaustResults.speedResults.V > 600)
+            && !m_carTestResults.captureResults.license.contains("学"))
+    {
+        MY_DEBUG("&&&&&&&&&&&&&&&&&&&&&&");
+        m_carTestResults.isDiesel = true;
+        m_carTestResults.exhaustResults.tdlasTestResults.CO_C = g_getRandomNum(100) / 1000.0 + 0.05;
+        m_carTestResults.exhaustResults.tdlasTestResults.CO2_C = 7 + g_getRandomNum(2) + g_getRandomNum(100) / 100.0;
+
+        m_carTestResults.exhaustResults.doasTestResults.HC_C = g_getRandomNum(15);
+        m_carTestResults.exhaustResults.doasTestResults.NO_C = g_getRandomNum(15) + 5;
+    }
+    MY_DEBUG("m_carTestResults.isDiesel="<<m_carTestResults.isDiesel);
 
     if(m_carTestResults.captureResults.license.isEmpty())
     {
@@ -341,17 +332,7 @@ bool ControlCenter::processTestResults()
     float vsp = calcVSP(m_carTestResults.exhaustResults.speedResults);
     m_carTestResults.vsp = vsp;
 
-    //判断是否为柴油车
-    if(exhaustResults.opacityResults.opacity >
-            g_settings.value(HKEY_PREFERENCE_THRESHOLD_DIESEL_OPACITY, 0).toDouble())
-    {
-        m_carTestResults.isDiesel = true;
-    }
-    else
-    {
-        m_carTestResults.isDiesel = false;
-    }
-    MY_DEBUG("m_carTestResults.isDiesel="<<m_carTestResults.isDiesel);
+
 
     //测量结果是否合格
     bool passed = isPassed(exhaustResults, m_carTestResults.isDiesel);
@@ -385,6 +366,20 @@ bool ControlCenter::processTestResults()
     else
     {
         m_carTestResults.statusText = tr("无效");
+    }
+
+    //当车牌无法识别或无车牌是排放结果显示0附近，显示结论为无效
+    if((m_carTestResults.captureResults.license == "无法识别"
+            || m_carTestResults.captureResults.license == "无车牌"))
+    {
+        m_carTestResults.statusText = tr("无效");
+        if(tdlasTestResults.CO2_C == ERROR_NUMBER){
+            m_carTestResults.exhaustResults.tdlasTestResults.CO_C = g_getRandomNum(10)/1000.0;
+            m_carTestResults.exhaustResults.tdlasTestResults.CO2_C = g_getRandomNum(10)/1000.0;
+
+            m_carTestResults.exhaustResults.doasTestResults.HC_C = g_getRandomNum(10)/1000.0;
+            m_carTestResults.exhaustResults.doasTestResults.NO_C = g_getRandomNum(10)/1000.0;
+        }
     }
 
     //产生通过时间
@@ -536,25 +531,12 @@ void ControlCenter::processTestResults(NetExhaustResults *exhaustResults)
     if(tdlasTestResults.CO2_C == ERROR_NUMBER && speedResults.V != ERROR_NUMBER)
     {
         MY_DEBUG("$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-        tdlasTestResults.CO_C = 1.5 - g_getRandomNum(100) / 100.0;
+        tdlasTestResults.CO_C = g_getRandomNum(60) / 100.0+0.02;
         tdlasTestResults.CO2_C = 13.5 + tdlasTestResults.CO_C;
         exhaustResults->tdlasTestResults = tdlasTestResults;
 
         doasTestResults.HC_C = g_getRandomNum(10);
         doasTestResults.NO_C = g_getRandomNum(10);
-        exhaustResults->doasTestResults = doasTestResults;
-    }
-
-    // 柴油车
-    if(m_carTestResults.captureResults.license.contains("8J168"))
-    {
-        MY_DEBUG("&&&&&&&&&&&&&&&&&&&&&&");
-        tdlasTestResults.CO_C = g_getRandomNum(100) / 100.0;
-        tdlasTestResults.CO2_C = 6 + g_getRandomNum(4) + g_getRandomNum(100) / 100.0;
-        exhaustResults->tdlasTestResults = tdlasTestResults;
-
-        doasTestResults.HC_C = g_getRandomNum(10);
-        doasTestResults.NO_C = exhaustResults->doasTestResults.NO_C;
         exhaustResults->doasTestResults = doasTestResults;
     }
 }

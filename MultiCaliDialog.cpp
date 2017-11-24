@@ -73,67 +73,13 @@ void MultiCaliDialog::buttonReleased(QWidget *w)
                 return;
             }
             if(buttonName.contains("1")){
-                QList<float> listX,listY;
-                QByteArray data;
-                QString str;
 
-                listX.append(0);
-                listX.append(ui->doubleSpinBox_HC_C_1->value()); //浓度C
-                listX.append(ui->doubleSpinBox_HC_C_2->value());
-                listX.append(ui->doubleSpinBox_HC_C_3->value());
-
-                listY.append(0);
-                listY.append(ui->lineEdit_HC_A_1->text().toFloat()*100);
-                listY.append(ui->lineEdit_HC_A_2->text().toFloat()*100);
-                listY.append(ui->lineEdit_HC_A_3->text().toFloat()*100);
-
-
-
-                str = "1,"+ QString::number(listX.at(1)*100);
-                data.append(str);
-                m_socketClient->send(data,NET_DATA_TYPE_SET_THREE_POINT);
             }
             else if(buttonName.contains("2")){
-                QList<float> listX,listY;
-                QByteArray data;
-                QString str;
 
-                listX.append(0);
-                listX.append(ui->doubleSpinBox_HC_C_1->value()); //浓度C
-                listX.append(ui->doubleSpinBox_HC_C_2->value());
-                listX.append(ui->doubleSpinBox_HC_C_3->value());
-
-                listY.append(0);
-                listY.append(ui->lineEdit_HC_A_1->text().toFloat()*100);
-                listY.append(ui->lineEdit_HC_A_2->text().toFloat()*100);
-                listY.append(ui->lineEdit_HC_A_3->text().toFloat()*100);
-
-
-
-                str = "1,"+ QString::number(listX.at(2)*100);
-                data.append(str);
-                m_socketClient->send(data,NET_DATA_TYPE_SET_THREE_POINT);
             }
             else if(buttonName.contains("3")){
-                QList<float> listX,listY;
-                QByteArray data;
-                QString str;
 
-                listX.append(0);
-                listX.append(ui->doubleSpinBox_HC_C_1->value()); //浓度C
-                listX.append(ui->doubleSpinBox_HC_C_2->value());
-                listX.append(ui->doubleSpinBox_HC_C_3->value());
-
-                listY.append(0);
-                listY.append(ui->lineEdit_HC_A_1->text().toFloat()*100);
-                listY.append(ui->lineEdit_HC_A_2->text().toFloat()*100);
-                listY.append(ui->lineEdit_HC_A_3->text().toFloat()*100);
-
-
-
-                str = "1,"+ QString::number(listX.at(3)*100);
-                data.append(str);
-                m_socketClient->send(data,NET_DATA_TYPE_SET_THREE_POINT);
             }
         }
         if(buttonName.contains("NO"))
@@ -631,3 +577,72 @@ void MultiCaliDialog::readSettings(QWidget *widget)
 
 
 
+
+void MultiCaliDialog::on_pushButton_HC_Cali_l_clicked()
+{
+    QList<float> listX,listY;
+    QByteArray data;
+    QString str;
+
+    listX.append(0);
+    listX.append(ui->doubleSpinBox_HC_C_1->value()); //浓度C
+    listX.append(ui->doubleSpinBox_HC_C_2->value());
+    listX.append(ui->doubleSpinBox_HC_C_3->value());
+
+    listY.append(0);
+    listY.append(ui->lineEdit_HC_A_1->text().toFloat()*100);
+    listY.append(ui->lineEdit_HC_A_2->text().toFloat()*100);
+    listY.append(ui->lineEdit_HC_A_3->text().toFloat()*100);
+
+
+
+    str = "1,"+ QString::number(listX.at(1)*100);
+    data.append(str);
+    m_socketClient->send(data,NET_DATA_TYPE_SET_THREE_POINT);
+}
+
+void MultiCaliDialog::on_pushButton_HC_Cali_2_clicked()
+{
+    QList<float> listX,listY;
+    QByteArray data;
+    QString str;
+
+    listX.append(0);
+    listX.append(ui->doubleSpinBox_HC_C_1->value()); //浓度C
+    listX.append(ui->doubleSpinBox_HC_C_2->value());
+    listX.append(ui->doubleSpinBox_HC_C_3->value());
+
+    listY.append(0);
+    listY.append(ui->lineEdit_HC_A_1->text().toFloat()*100);
+    listY.append(ui->lineEdit_HC_A_2->text().toFloat()*100);
+    listY.append(ui->lineEdit_HC_A_3->text().toFloat()*100);
+
+
+
+    str = "1,"+ QString::number(listX.at(2)*100);
+    data.append(str);
+    m_socketClient->send(data,NET_DATA_TYPE_SET_THREE_POINT);
+}
+
+void MultiCaliDialog::on_pushButton_HC_Cali_3_clicked()
+{
+    QList<float> listX,listY;
+    QByteArray data;
+    QString str;
+
+    listX.append(0);
+    listX.append(ui->doubleSpinBox_HC_C_1->value()); //浓度C
+    listX.append(ui->doubleSpinBox_HC_C_2->value());
+    listX.append(ui->doubleSpinBox_HC_C_3->value());
+
+    listY.append(0);
+    listY.append(ui->lineEdit_HC_A_1->text().toFloat()*100);
+    listY.append(ui->lineEdit_HC_A_2->text().toFloat()*100);
+    listY.append(ui->lineEdit_HC_A_3->text().toFloat()*100);
+
+
+
+    str = "1,"+ QString::number(listX.at(3)*100);
+    data.append(str);
+    m_socketClient->send(data,NET_DATA_TYPE_SET_THREE_POINT);
+}

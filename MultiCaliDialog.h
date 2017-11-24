@@ -72,6 +72,9 @@ private slots:
     void hasClient(bool value);
     void showEvent(QShowEvent *event);
     void closeEvent(QCloseEvent *event);
+    void on_pushButton_HC_Cali_l_clicked();
+    void on_pushButton_HC_Cali_2_clicked();
+    void on_pushButton_HC_Cali_3_clicked();
 };
 
 #endif // MULTICALIDIALOG_H

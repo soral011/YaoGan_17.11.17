@@ -700,13 +700,13 @@ QPixmap Camera::capturePic()
 
 //    qDebug()<<"CapturePic filename:"<<filename;
     //设置抓图模式
-    NET_DVR_SetCapturePictureMode(1);
+    NET_DVR_SetCapturePictureMode(0);
 
     //抓图并保存
-    bool success = NET_DVR_CapturePicture(m_lUserID,filename.toUtf8().data());
+    bool success = NET_DVR_CapturePicture(m_lUserID,"D:\\1.bmp"); //filename.toLatin1().data());
     if(success == true)
     {
-        vehiclePic.load(filename);
+        vehiclePic.load("D:\\1.bmp");
     }
     return vehiclePic;
 }
@@ -720,6 +720,34 @@ void Camera::reconnect(QString cameraIp)
         this->m_cameraIp = cameraIp;
         m_isReconnect = true;
     }
+}
+
+QPixmap Camera::processPixmap(QPixmap mapIn,CaptureResults captureResults)
+{
+    QPixmap tmpmap;
+    QSize pic_size;
+
+    NET_VCA_RECT struPlateRect = captureResults.struPlateRect;
+
+    pic_size = mapIn.size();
+
+    float posX = pic_size.width() * struPlateRect.fX;
+    float posY = pic_size.height() * struPlateRect.fY;
+    int lisencePicW = pic_size.width() * struPlateRect.fWidth;
+    int lisencePicH = pic_size.height() * struPlateRect.fHeight;
+
+    //防止图片超界
+    float x,y;
+    x = qMin(pic_size.width()/3*2,(int)(posX + lisencePicW / 2 - pic_size.width()/6));
+    x = qMax(0,(int)(posX + lisencePicW / 2-pic_size.width()/6));
+    y = qMin(pic_size.height()/2,(int)(posY + lisencePicH/2 - pic_size.width()/4));
+    y = qMax(0,(int)(posY + lisencePicH/2- pic_size.width()/4));
+
+
+
+    tmpmap = mapIn.copy(x ,y ,pic_size.width()/3,pic_size.height()/2);
+
+    return tmpmap;
 }
 
 //主要是将场景图裁剪得出只包含辆车的图片

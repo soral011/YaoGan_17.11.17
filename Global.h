@@ -108,7 +108,7 @@ class CarTestResults
 {
 public:
     CaptureResults    captureResults; //车牌信息
-    QVector <CaptureResults>    captureResults_vector;//车牌存储队列
+    QList <CaptureResults>    captureResults_vector;//车牌存储队列
     NetExhaustResults exhaustResults; //尾气、测速等检测结果
     WeatherReport     weatherReport;  //气象信息
 

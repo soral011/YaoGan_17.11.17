@@ -81,39 +81,39 @@ MainWindow::MainWindow(QWidget *parent) :
 
     qDebug()<<"b m_propertyList.count() = "<<m_propertyList.count();
 
-    for(int column = 0; column < m_propertyList.count(); column++)
-    {
+//    for(int column = 0; column < m_propertyList.count(); column++)
+//    {
 
-        QTableWidgetItem *item;
+//        QTableWidgetItem *item;
 
-        item = ui->tableWidget_test_result_list->horizontalHeaderItem(column);
-        if(item == 0)
-        {
-            item = new QTableWidgetItem();
-            ui->tableWidget_test_result_list->setHorizontalHeaderItem(column,item);
-        }
-        item->setText(m_propertyList.at(column).m_text);
-        if(m_propertyList.at(column).m_property == PROPERTY_PASS_TIME)
-        {
-            ui->tableWidget_test_result_list->horizontalHeader()
-                    ->resizeSection(column,160);
-        }
-        else if(m_propertyList.at(column).m_property == PROPERTY_lICENCE)
-        {
-            ui->tableWidget_test_result_list->horizontalHeader()
-                    ->resizeSection(column,79);
-        }
-        else
-        {
-            //自动切换字体大小
-            QFontMetrics font_metrics = ui->tableWidget_test_result_list
-                    ->horizontalHeader()->fontMetrics();
+//        item = ui->tableWidget_test_result_list->horizontalHeaderItem(column);
+//        if(item == 0)
+//        {
+//            item = new QTableWidgetItem();
+//            ui->tableWidget_test_result_list->setHorizontalHeaderItem(column,item);
+//        }
+//        item->setText(m_propertyList.at(column).m_text);
+//        if(m_propertyList.at(column).m_property == PROPERTY_PASS_TIME)
+//        {
+//            ui->tableWidget_test_result_list->horizontalHeader()
+//                    ->resizeSection(column,160);
+//        }
+//        else if(m_propertyList.at(column).m_property == PROPERTY_lICENCE)
+//        {
+//            ui->tableWidget_test_result_list->horizontalHeader()
+//                    ->resizeSection(column,79);
+//        }
+//        else
+//        {
+//            //自动切换字体大小
+//            QFontMetrics font_metrics = ui->tableWidget_test_result_list
+//                    ->horizontalHeader()->fontMetrics();
 
-            int width = font_metrics.width(m_propertyList.at(column).m_text);
-            ui->tableWidget_test_result_list->horizontalHeader()
-                    ->resizeSection(column,width+28);
-        }
-    }
+//            int width = font_metrics.width(m_propertyList.at(column).m_text);
+//            ui->tableWidget_test_result_list->horizontalHeader()
+//                    ->resizeSection(column,width+28);
+//        }
+//    }
     g_clearPushButtonFocus(this);
 
 }
@@ -483,46 +483,46 @@ int MainWindow::getColumnPosition(QString property)
 
 void MainWindow::switchCarPic(QPixmap carPixmap)
 {
-    //使用属性动画来切换图片
-    QSize car_size = ui->label_show_capture_img->size();
-    QPixmap pixmap(car_size.width()*2, car_size.height());
-    QPainter painter(&pixmap);
-    bool is_on_right = true;
-    if(is_on_right)
-    {
-        painter.drawPixmap(0, 0, ui->label_show_capture_img->grab());
-        painter.drawPixmap(car_size.width(), 0, carPixmap.scaled(car_size));
-    }
-    else
-    {
-        painter.drawPixmap(0, 0, carPixmap.scaled(car_size));
-        painter.drawPixmap(car_size.width(), 0, ui->label_show_capture_img->grab());
-    }
+//    //使用属性动画来切换图片
+//    QSize car_size = ui->label_show_capture_img->size();
+//    QPixmap pixmap(car_size.width()*2, car_size.height());
+//    QPainter painter(&pixmap);
+//    bool is_on_right = true;
+//    if(is_on_right)
+//    {
+//        painter.drawPixmap(0, 0, ui->label_show_capture_img->grab());
+//        painter.drawPixmap(car_size.width(), 0, carPixmap.scaled(car_size));
+//    }
+//    else
+//    {
+//        painter.drawPixmap(0, 0, carPixmap.scaled(car_size));
+//        painter.drawPixmap(car_size.width(), 0, ui->label_show_capture_img->grab());
+//    }
 
-    painter.end();
+//    painter.end();
 
-    QLabel *label = new QLabel(ui->label_show_capture_img);
-    label->resize(car_size.width()*2, car_size.height());
-//    label->move(0,0);
-    label->setPixmap(pixmap);
-    label->show();
-//    qDebug()<<"pixmap.size() = "<<pixmap.size();
-//    qDebug()<<"label.size() = "<<label->size();
-    QPropertyAnimation *anim = new QPropertyAnimation(label,"pos");
-    anim->setDuration(380);
-    anim->setEasingCurve(QEasingCurve::OutQuad);
-    if(is_on_right)
-    {
-        anim->setStartValue(QPoint(-car_size.width()/2,0));
-        anim->setEndValue(QPoint(-car_size.width(),0));
-    }
-    else
-    {
-        anim->setStartValue(QPoint(-car_size.width()/2,0));
-        anim->setEndValue(QPoint(0,0));
-    }
-    anim->start();
-    connect(anim, SIGNAL(finished()), label, SLOT(deleteLater()));
+//    QLabel *label = new QLabel(ui->label_show_capture_img);
+//    label->resize(car_size.width()*2, car_size.height());
+////    label->move(0,0);
+//    label->setPixmap(pixmap);
+//    label->show();
+////    qDebug()<<"pixmap.size() = "<<pixmap.size();
+////    qDebug()<<"label.size() = "<<label->size();
+//    QPropertyAnimation *anim = new QPropertyAnimation(label,"pos");
+//    anim->setDuration(380);
+//    anim->setEasingCurve(QEasingCurve::OutQuad);
+//    if(is_on_right)
+//    {
+//        anim->setStartValue(QPoint(-car_size.width()/2,0));
+//        anim->setEndValue(QPoint(-car_size.width(),0));
+//    }
+//    else
+//    {
+//        anim->setStartValue(QPoint(-car_size.width()/2,0));
+//        anim->setEndValue(QPoint(0,0));
+//    }
+//    anim->start();
+//    connect(anim, SIGNAL(finished()), label, SLOT(deleteLater()));
 
 
     ui->label_show_capture_img->setPixmap(carPixmap);
@@ -790,7 +790,10 @@ void MainWindow::receiveTestResult(CarTestResults carTestResults)
     m_captureResults = carTestResults.captureResults;
 
     //显示抓拍图片
+    QPixmap tmpImg = m_captureResults.vehiclePic;
     QPixmap carImg = m_captureResults.vehiclePic;
+    if(m_captureResults.license != "无法识别" && m_captureResults.license != "无车牌")
+        carImg = m_camera->processPixmap(tmpImg,m_captureResults);
     carImg = carImg.scaled(ui->label_show_capture_img->size());
     switchCarPic(carImg);
 
@@ -805,23 +808,66 @@ void MainWindow::receiveTestResult(CarTestResults carTestResults)
 
 void MainWindow::addOneRowTestResult()
 {
+    //重新初始化表头
+    static bool result_list_init_flag = true;
+    if(result_list_init_flag){
+        result_list_init_flag = false;
+
+        QList <QString>     HeaderString;
+        HeaderString.append("序号");
+        HeaderString.append("状态");
+        HeaderString.append("通过时间");
+        HeaderString.append("车牌");
+        HeaderString.append("颜色");
+        HeaderString.append("CO浓度");
+        HeaderString.append("CO2浓度");
+        HeaderString.append("NO浓度");
+        HeaderString.append("HC浓度");
+        HeaderString.append("黑度");
+        HeaderString.append("最大不透光度");
+        HeaderString.append("平均不透光度");
+        HeaderString.append("VSP");
+        HeaderString.append("速度");
+        HeaderString.append("加速度");
+        HeaderString.append("车牌置信度");
+        HeaderString.append("风速");
+        HeaderString.append("风向");
+        HeaderString.append("温度");
+
+        ui->tableWidget_test_result_list->insertRow(0);
+
+        QTableWidgetItem *item;
+        for(int i = 0; i<HeaderString.count(); i++)
+        {
+            item = ui->tableWidget_test_result_list->item(0, i);
+            if(item == 0)
+            {
+                item = new QTableWidgetItem();
+                ui->tableWidget_test_result_list->setItem(0, i, item);
+            }
+            item->setText(HeaderString.at(i));
+        }
+
+    }
+
     //点阵屏显示
     show_result result;
     result.car_license = m_captureResults.license;
     result.isok = m_carTestResults.statusText;
+    m_led->setParm("192.168.1.249",2929);
     m_led->connect_servers();
     m_led->set_playlst(result);
     m_led->sendmsg();
 
 
-    int row = 0;
+    int row = 1;
 
     QString carLicense = m_captureResults.license;
     QString carLicenseColor = m_captureResults.licenseColor;
     int byEntireBelievability = m_captureResults.believability;
 
     //在表格开头添加一行
-    ui->tableWidget_test_result_list->insertRow(0);
+    ui->tableWidget_test_result_list->insertRow(1);
     QTableWidgetItem *item;
     for(int i = 0; i<ui->tableWidget_test_result_list->columnCount(); i++)
     {
@@ -836,7 +882,7 @@ void MainWindow::addOneRowTestResult()
     //序号
     int column = this->getColumnPosition(PROPERTY_SEQUENCE_NUMBER);
     item = ui->tableWidget_test_result_list->item(row, column);
-    item->setText( QString().setNum(ui->tableWidget_test_result_list->rowCount()) );
+    item->setText( QString().setNum(ui->tableWidget_test_result_list->rowCount()-1) );
 
     //状态
     column = this->getColumnPosition(PROPERTY_RECORD_STATUS);
@@ -846,7 +892,8 @@ void MainWindow::addOneRowTestResult()
     //通过时间
     column = this->getColumnPosition(PROPERTY_PASS_TIME);
     item = ui->tableWidget_test_result_list->item(row,column);
-    item->setText(m_carTestResults.passTime);
+    QString tmp = m_carTestResults.passTime.section(" ",-1);
+    item->setText(tmp);
 
     //车牌号
     column = this->getColumnPosition(PROPERTY_lICENCE);
@@ -1058,6 +1105,40 @@ void MainWindow::deviceConnection(bool isConnected)
 void MainWindow::updateMainWindow()
 {
     QWidget *widget = NULL;
+
+    for(int column = 0; column < m_propertyList.count(); column++)
+    {
+
+        QTableWidgetItem *item;
+
+        item = ui->tableWidget_test_result_list->horizontalHeaderItem(column);
+        if(item == 0)
+        {
+            item = new QTableWidgetItem();
+            ui->tableWidget_test_result_list->setHorizontalHeaderItem(column,item);
+        }
+        item->setText(m_propertyList.at(column).m_text);
+        if(m_propertyList.at(column).m_property == PROPERTY_PASS_TIME)
+        {
+            ui->tableWidget_test_result_list->horizontalHeader()
+                    ->resizeSection(column,160);
+        }
+        else if(m_propertyList.at(column).m_property == PROPERTY_lICENCE)
+        {
+            ui->tableWidget_test_result_list->horizontalHeader()
+                    ->resizeSection(column,79);
+        }
+        else
+        {
+            //自动切换字体大小
+            QFontMetrics font_metrics = ui->tableWidget_test_result_list
+                    ->horizontalHeader()->fontMetrics();
+
+            int width = font_metrics.width(m_propertyList.at(column).m_text);
+            ui->tableWidget_test_result_list->horizontalHeader()
+                    ->resizeSection(column,width+28);
+        }
+    }
 
     bool isConnected = m_systemStatus->m_isCameraConnected &&
                         m_systemStatus->m_isTestHostConnected;
