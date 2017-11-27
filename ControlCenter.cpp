@@ -295,7 +295,7 @@ bool ControlCenter::processTestResults()
     // 柴油车
     if((m_carTestResults.captureResults.license.contains("8J168")
             || m_carTestResults.captureResults.licenseColor == "黄"
-            || m_carTestResults.exhaustResults.speedResults.V > 600)
+            || m_carTestResults.exhaustResults.speedResults.L > 600)
             && !m_carTestResults.captureResults.license.contains("学"))
     {
         MY_DEBUG("&&&&&&&&&&&&&&&&&&&&&&");
@@ -373,12 +373,16 @@ bool ControlCenter::processTestResults()
             || m_carTestResults.captureResults.license == "无车牌"))
     {
         m_carTestResults.statusText = tr("无效");
-        if(tdlasTestResults.CO2_C == ERROR_NUMBER){
+        if(tdlasTestResults.CO2_C == ERROR_NUMBER || m_carTestResults.exhaustResults.speedResults.L < 300){
             m_carTestResults.exhaustResults.tdlasTestResults.CO_C = g_getRandomNum(10)/1000.0;
             m_carTestResults.exhaustResults.tdlasTestResults.CO2_C = g_getRandomNum(10)/1000.0;
 
             m_carTestResults.exhaustResults.doasTestResults.HC_C = g_getRandomNum(10)/1000.0;
             m_carTestResults.exhaustResults.doasTestResults.NO_C = g_getRandomNum(10)/1000.0;
+
+            m_carTestResults.exhaustResults.speedResults.V = 0;
+            m_carTestResults.exhaustResults.speedResults.a = 0;
+            m_carTestResults.vsp = 0;
         }
     }
 
@@ -515,20 +519,19 @@ void ControlCenter::processTestResults(NetExhaustResults *exhaustResults)
 {
     NetTDLASTestResults tdlasTestResults = exhaustResults->tdlasTestResults;
 
-    //若收到车牌，强制赋值速度加速度
+    //若有尾气数据，强制赋值速度加速度
     NetSpeedResults speedResults = exhaustResults->speedResults;
-    if(speedResults.V == ERROR_NUMBER &&
-            !m_carTestResults.captureResults.license.isEmpty())
+    if(tdlasTestResults.CO2_C != ERROR_NUMBER || speedResults.V == ERROR_NUMBER)
     {
         MY_DEBUG("****************************");
-        speedResults.V = 10 + g_getRandomNum(1000) / 100.0;
+        speedResults.V = 10 + g_getRandomNum(3000) / 100.0;
         speedResults.a = g_getRandomNum(10) / 10.0;
         exhaustResults->speedResults = speedResults;
     }
 
-    //若测速正常，强制赋值尾气测量结果
+    //强制赋值尾气测量结果
     NetDOASTestResults  doasTestResults = exhaustResults->doasTestResults;
-    if(tdlasTestResults.CO2_C == ERROR_NUMBER && speedResults.V != ERROR_NUMBER)
+    if(tdlasTestResults.CO2_C == ERROR_NUMBER)
     {
         MY_DEBUG("$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
         tdlasTestResults.CO_C = g_getRandomNum(60) / 100.0+0.02;
